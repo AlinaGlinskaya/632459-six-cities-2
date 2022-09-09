@@ -4,7 +4,7 @@ import HelpCommand from './cli-command/help-command.js';
 
 const myManager = new CLIApplication();
 myManager.registerCommands([
-  new VersionCommand,  new HelpCommand
+  new VersionCommand, new HelpCommand
 ]);
 myManager.processCommand(process.argv);
 

@@ -1,9 +1,9 @@
 import { CliCommandInterface } from './cli-command.interface.js';
 
 export default class HelpCommand implements CliCommandInterface {
-  public name = '--help';
+  public readonly name = '--help';
 
-  public async execute() {
+  public async execute(): Promise<void> {
     console.log(`
       Программа для подготовки данных для REST API сервера.
 
