@@ -1,0 +1,101 @@
+{
+  "api": {
+    "offerNames": [
+      "Studio",
+      "Stone",
+      "Apartments",
+      "Private Room",
+      "Flat",
+      "House"
+    ],
+    "desciptions": [
+      "Wood and stone place",
+      "Canal View Prinsengracht",
+      "Comfortable for pairs",
+      "Nice, cozy, warm big bed apartment",
+      "Beautiful & luxurious apartment at great location",
+      "Perfect for downshifting"
+    ],
+    "cities": [
+      "Paris",
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
+    ],
+    "photos": [
+      "https://i.com/0",
+      "https://i.com/1",
+      "https://i.com/2",
+      "https://i.com/3",
+      "https://i.com/4",
+      "https://i.com/5",
+      "https://i.com/6",
+      "https://i.com/7",
+      "https://i.com/8"
+    ],
+    "housingType": [
+      "Apartment",
+      "House",
+      "Room",
+      "Hotel"
+    ],
+    "conveniences": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "userNames": [
+      "John",
+      "Alice",
+      "Amanda",
+      "Leon",
+      "Stephen",
+      "Norma"
+    ],
+    "emails": [
+      "amanda@mail.local",
+      "pochta@mail.local",
+      "alice19@mail.local",
+      "johnwalker@mail.local",
+      "wolf@mail.local",
+      "dan15@mail.local"
+    ],
+    "avatars": [
+      "ava1.jpg",
+      "ava2.jpg",
+      "ava3.jpg",
+      "ava4.jpg",
+      "ava5.jpg"
+    ],
+    "passwords": [
+      "123",
+      "qwerty",
+      "1992",
+      "awesome",
+      "3456",
+      "qwer789"
+    ],
+    "latitudes": [
+      "48.85661",
+      "50.938361",
+      "50.846557",
+      "52.370216",
+      "53.550341",
+      "51.225402"
+    ],
+    "longitudes": [
+      "2.351499",
+      "6.959974",
+      "4.351697",
+      "4.895168",
+      "10.000654",
+      "6.776314"
+    ]
+  }
+}
