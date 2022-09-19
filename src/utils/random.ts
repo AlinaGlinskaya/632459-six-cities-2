@@ -9,3 +9,8 @@ export const getRandomItems = <T>(items: T[]):T[] => {
 
 export const getRandomItem = <T>(items: T[]):T =>
   items[generateRandomValue(0, items.length -1)];
+
+export const shuffleArray = <T>(items: T[]):T[] => {
+  const shuffledArray = items.sort(() => Math.random() - 0.5);
+  return shuffledArray;
+};
