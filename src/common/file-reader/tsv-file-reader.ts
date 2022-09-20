@@ -1,16 +1,14 @@
 import { createReadStream } from 'fs';
 import { EventEmitter } from 'events';
-import { FileReader } from './file-reader.interface.js';
+import { FileReaderInterface } from './file-reader.interface.js';
 
-const HIGHWATERMARK = 16384; //16KB
-
-export default class TSVFileReader extends EventEmitter implements FileReader {
+export default class TSVFileReader extends EventEmitter implements FileReaderInterface {
   constructor(public filename: string) {
     super();
   }
 
   public async read(): Promise<void> {
-    const stream = createReadStream(this.filename, {encoding: 'utf-8', highWaterMark: HIGHWATERMARK});
+    const stream = createReadStream(this.filename, {encoding: 'utf-8', highWaterMark: 16384});
 
     let lineRead = '';
     let endLinePosition = -1;
