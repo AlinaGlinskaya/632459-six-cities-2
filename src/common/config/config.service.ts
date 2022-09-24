@@ -1,9 +1,10 @@
 import { ConfigInterface } from './config.interface.js';
-import {DotenvParseOutput, config} from 'dotenv';
+import {config} from 'dotenv';
 import { LoggerInterface } from '../logger/logger.interface.js';
+import { ConfigSchema, configSchema } from './config.schema.js';
 
 export default class ConfigService implements ConfigInterface {
-  private config: DotenvParseOutput;
+  private config: ConfigSchema;
   private logger: LoggerInterface;
 
   constructor(logger: LoggerInterface) {
@@ -15,12 +16,14 @@ export default class ConfigService implements ConfigInterface {
       throw new Error('Can\'t read .env file. Perhaps this file does not exists');
     }
 
-    this.config = <DotenvParseOutput>parsedOutput.parsed;
-    this.logger.info('env file successfully parsed.');
+    configSchema.load({});
+    configSchema.validate({allowed: 'strict', output: this.logger.info});
+    this.config = configSchema.getProperties();
+    this.logger.info('.env file successfully parsed.');
 
   }
 
-  public get(key: string): string | undefined {
+  public get<T extends keyof ConfigSchema>(key: T): ConfigSchema[T] {
     return this.config[key];
   }
 }
