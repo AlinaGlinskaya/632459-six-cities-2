@@ -33,4 +33,14 @@ export const enum PasswordLength {
   MAX = 12
 }
 
+export const enum OfferNameLength {
+  MIN = 10,
+  MAX = 100
+}
+
+export const enum OfferDescLength {
+  MIN = 20,
+  MAX = 1024
+}
+
 export const HOUSE_PHOTO_COUNT = 6;
