@@ -2,8 +2,17 @@ import { User } from '../../types/user.type';
 import { UserStatus } from '../../types/user-status.enum';
 import { UsernameLength, PasswordLength } from '../../const.js';
 import typegoose, {getModelForClass, defaultClasses} from '@typegoose/typegoose';
+import { createSHA256 } from '../../utils/common.js';
 
-const {prop} = typegoose;
+const {prop, modelOptions} = typegoose;
+
+export interface UserEntity extends defaultClasses.Base {}
+
+@modelOptions({
+  schemaOptions: {
+    collection: 'users'
+  }
+})
 
 export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({required: true, minlength: UsernameLength.MIN, maxlength: UsernameLength.MAX})
@@ -20,6 +29,14 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
   @prop({required: true, enum: UserStatus})
   public userStatus!: UserStatus;
+
+  public setPassword(password: string, salt: string) {
+    this.password = createSHA256(password, salt);
+  }
+
+  public getPassword() {
+    return this.password;
+  }
 }
 
 export const userModel = getModelForClass(UserEntity);

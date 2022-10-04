@@ -2,6 +2,7 @@ import { Offer } from '../types/offer.type';
 import { City } from '../types/city.enum';
 import { HousingType } from '../types/housing-type.enum';
 import { UserStatus } from '../types/user-status.enum';
+import crypto from 'crypto';
 
 const parseLocation = (location: string[]) => {
   const [latitude, longitude] = location;
@@ -57,3 +58,8 @@ export const createOffer = (row: string) => {
 };
 
 export const getErrorMessage = (error: unknown): string => error instanceof Error ? error.message : '';
+
+export const createSHA256 = (password: string, salt: string) => {
+  const shaHasher = crypto.createHmac('sha256', salt);
+  return shaHasher.update(password).digest('hex');
+};

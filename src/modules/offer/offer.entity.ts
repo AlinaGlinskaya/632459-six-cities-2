@@ -9,6 +9,8 @@ import { Coordinate } from '../../types/coordinate.type';
 
 const {prop} = typegoose;
 
+export interface OfferEntity extends defaultClasses.Base {}
+
 export class OfferEntity extends defaultClasses.TimeStamps implements Offer {
   @prop({required: true, minlength: OfferNameLength.MIN, maxlength: OfferNameLength.MAX})
   public offerName!: string;
