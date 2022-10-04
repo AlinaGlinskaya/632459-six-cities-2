@@ -15,6 +15,16 @@ export interface UserEntity extends defaultClasses.Base {}
 })
 
 export class UserEntity extends defaultClasses.TimeStamps implements User {
+  constructor(data: User) {
+    super();
+
+    this.userName = data.userName;
+    this.email = data.email;
+    this.avatarPath = data.avatarPath;
+    this.password = data.password;
+    this.userStatus = data.userStatus;
+  }
+
   @prop({required: true, minlength: UsernameLength.MIN, maxlength: UsernameLength.MAX})
   public userName!: string;
 
@@ -39,4 +49,4 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   }
 }
 
-export const userModel = getModelForClass(UserEntity);
+export const UserModel = getModelForClass(UserEntity);
