@@ -6,6 +6,7 @@ import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
+import chalk from 'chalk';
 
 @injectable()
 export default class UserService implements UserServiceInterface {
@@ -18,7 +19,7 @@ export default class UserService implements UserServiceInterface {
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
-    this.logger.info(`New user ${dto.email} created`);
+    this.logger.info(chalk.green(`New user ${dto.email} created`));
     return result;
   }
 

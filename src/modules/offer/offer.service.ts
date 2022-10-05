@@ -5,6 +5,7 @@ import { LoggerInterface } from '../../common/logger/logger.interface';
 import { types } from '@typegoose/typegoose';
 import { OfferEntity } from './offer.entity';
 import createOfferDto from './dto/create-offer.dto';
+import chalk from 'chalk';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -14,7 +15,7 @@ export default class OfferService implements OfferServiceInterface {
 
   public async create(dto: createOfferDto): Promise<types.DocumentType<OfferEntity>> {
     const result = await this.offerModel.create(dto);
-    this.logger.info(`Offer ${dto.offerName} created.`);
+    this.logger.info(chalk.green(`Offer ${dto.offerName} created.`));
 
     return result;
   }
