@@ -18,7 +18,7 @@ export default class TSVFileReader extends EventEmitter implements FileReaderInt
       lineRead += chunk.toString();
 
       while ((endLinePosition = lineRead.indexOf('\n')) >= 0) {
-        const completedRow = lineRead.slice(0, ++endLinePosition);
+        const completedRow = lineRead.slice(0, endLinePosition + 1);
         lineRead = lineRead.slice(++endLinePosition);
         importedRowCount++;
 
