@@ -15,7 +15,7 @@ export default class HelpCommand implements CliCommandInterface {
         ${chalk.blue('--help:')}                       ## команда по умолчанию, выводит данное сообщение
         ${chalk.blue('--version:')}                    ## выводит номер версии
         ${chalk.blue('--import <path>:')}              ## импортирует данные из TSV
-        ${chalk.blue('--generator <n> <path> <url>')}  ## генерирует указанное количество тестовых данных
+        ${chalk.blue('--generate <n> <path> <url>')}  ## генерирует указанное количество тестовых данных
     `);
   }
 }

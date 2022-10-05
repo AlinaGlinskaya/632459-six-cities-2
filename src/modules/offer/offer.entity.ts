@@ -1,20 +1,26 @@
 import typegoose, {getModelForClass, defaultClasses, Ref} from '@typegoose/typegoose';
-import { OfferNameLength, OfferDescLength, Rating, RoomCount, GuestCount, Price } from '../../const.js';
+import {Rating, RoomCount, GuestCount, Price } from '../../const.js';
 import { City } from '../../types/city.enum.js';
 import { HousingType } from '../../types/housing-type.enum.js';
 import { Convenience } from '../../types/convenience.type.js';
 import { Coordinate } from '../../types/coordinate.type.js';
 import { UserEntity } from '../user/user.entity.js';
 
-const {prop} = typegoose;
+const {prop, modelOptions} = typegoose;
 
 export interface OfferEntity extends defaultClasses.Base {}
 
+@modelOptions({
+  schemaOptions: {
+    collection: 'offers'
+  }
+})
+
 export class OfferEntity extends defaultClasses.TimeStamps {
-  @prop({required: true, trim: true, minlength: OfferNameLength.MIN, maxlength: OfferNameLength.MAX})
+  @prop({required: true, trim: true})
   public offerName!: string;
 
-  @prop({required: true, trim: true, minlength: OfferDescLength.MIN, maxlength: OfferDescLength.MAX})
+  @prop({required: true, trim: true})
   public description!: string;
 
   @prop({required: true})
