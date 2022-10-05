@@ -1,5 +1,5 @@
 import pino, {Logger} from 'pino';
-import { injectable } from 'inversify/lib/annotation/injectable.js';
+import { injectable } from 'inversify';
 import { LoggerInterface } from './logger.interface.js';
 
 @injectable()

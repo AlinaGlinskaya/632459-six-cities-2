@@ -1,5 +1,5 @@
-import { User } from '../../types/user.type';
-import { UserStatus } from '../../types/user-status.enum';
+import { User } from '../../types/user.type.js';
+import { UserStatus } from '../../types/user-status.enum.js';
 import { UsernameLength, PasswordLength } from '../../const.js';
 import typegoose, {getModelForClass, defaultClasses} from '@typegoose/typegoose';
 import { createSHA256 } from '../../utils/common.js';

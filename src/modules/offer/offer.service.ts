@@ -1,10 +1,10 @@
-import { OfferServiceInterface } from './offer-service.interface';
+import { OfferServiceInterface } from './offer-service.interface.js';
 import {inject, injectable} from 'inversify';
-import { Component } from '../../types/component.types';
-import { LoggerInterface } from '../../common/logger/logger.interface';
+import { Component } from '../../types/component.types.js';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { types } from '@typegoose/typegoose';
-import { OfferEntity } from './offer.entity';
-import createOfferDto from './dto/create-offer.dto';
+import { OfferEntity } from './offer.entity.js';
+import createOfferDto from './dto/create-offer.dto.js';
 import chalk from 'chalk';
 
 @injectable()

@@ -1,7 +1,7 @@
-import { Offer } from '../types/offer.type';
-import { City } from '../types/city.enum';
-import { HousingType } from '../types/housing-type.enum';
-import { UserStatus } from '../types/user-status.enum';
+import { Offer } from '../types/offer.type.js';
+import { City } from '../types/city.enum.js';
+import { HousingType } from '../types/housing-type.enum.js';
+import { UserStatus } from '../types/user-status.enum.js';
 import crypto from 'crypto';
 
 const parseLocation = (location: string[]) => {
