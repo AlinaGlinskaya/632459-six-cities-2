@@ -6,7 +6,11 @@ convict.addFormats(validator);
 export type ConfigSchema = {
   PORT: number;
   DB_HOST: string;
-  SALT: string | null;
+  SALT: string;
+  DB_USER: string,
+  DB_PASSWORD: string,
+  DB_PORT: number,
+  DB_NAME: string
 }
 
 export const configSchema = convict({
@@ -25,7 +29,31 @@ export const configSchema = convict({
   SALT: {
     doc: 'Salt for passwod hash',
     format: String,
-    default: null,
+    default: '',
     env: 'SALT'
+  },
+  DB_USER: {
+    doc: 'Username to connect to the database (MongoDB)',
+    format: String,
+    default: '',
+    env: 'DB_USER'
+  },
+  DB_PASSWORD: {
+    doc: 'Password to connect to the database (MongoDB)',
+    format: String,
+    default: '',
+    env: 'DB_PASSWORD'
+  },
+  DB_PORT: {
+    doc: 'Database port (MongoDB)',
+    format: Number,
+    default: 27017,
+    env: 'DB_PORT'
+  },
+  DB_NAME: {
+    doc: 'Database name (MongoDB)',
+    format: String,
+    default: 'six-cities',
+    env: 'DB_NAME'
   }
 });

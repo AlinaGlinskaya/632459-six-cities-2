@@ -1,4 +1,4 @@
-import { UserStatus } from './user-status.enum';
+import { UserStatus } from './user-status.enum.js';
 
 export type User = {
   userName: string,

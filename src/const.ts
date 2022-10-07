@@ -23,4 +23,9 @@ export const enum Price {
   MAX = 100000
 }
 
+export const enum UsernameLength {
+  MIN = 1,
+  MAX = 15
+}
+
 export const HOUSE_PHOTO_COUNT = 6;
