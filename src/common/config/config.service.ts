@@ -13,7 +13,7 @@ export default class ConfigService implements ConfigInterface {
   constructor(@inject(Component.LoggerInterface)logger: LoggerInterface) {
     this.logger = logger;
 
-    const parsedOutput = config({path: '.env.example'});
+    const parsedOutput = config({path: '.env'});
 
     if (parsedOutput.error) {
       throw new Error('Can\'t read .env file. Perhaps this file does not exists');
