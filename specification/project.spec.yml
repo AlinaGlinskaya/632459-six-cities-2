@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: API сервер для учебного проекта «Шесть городов»
+  description: Список маршрутов и ресурсов сервера «Шесть городов»
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+tags:
+  - name: offers
+    description: Действия с предложениями аренды
+  - name: users
+    description: Действия с пользователями
+  - name: comments
+    description: Действия с комментариями
+  - name: favorite
+    description: Действия с избранным
+paths:
+  /offers:
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения
+      description: Создает новое предложение аренды
+    get:
+      tags:
+        - offers
+      summary: Получение списка предложений
+      description: Возвращает список предложений по аренде
+  /offers/${offerId}:
+    put:
+      tags:
+        - offers
+      summary: Редактирование предложения
+      description: Редактирует существующее предложение с идентификатором offerId
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения
+      description: Удаляет существующее предложение с идентификатором offerId
+    get:
+      tags:
+      - offers
+      summary: Получение детальной информации о предложении
+      description: Возвращает детальную информацию о предложении с идентификатором offerId
+  /comments/${offerId}:
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев для предложения
+      description: Возвращает список комментариев для предложения с идентификатором offerId
+    post:
+      tags:
+        - comments
+      summary: Добавление комментария для предложения
+      description: Добавляет комментарий к предложению с идентификатором offerId
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Создание нового пользователя
+      description: Создает нового пользователя
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Вход в закрытую часть приложения
+      description: Авторизует пользователя на основе логина и пароля
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию о пользователе в случае успешной проверки логина и пароля
+  /users/logout:
+    delete:
+      tags:
+        - users
+      summary: Выход из закрытой части приложения
+      description: Завершает сеанс, если токен прошел проверку
+  /offers/premium/${city}:
+    get:
+      tags:
+        - offers
+      summary: Получение списка премиальных предложений для города
+      description: Возвращает список предложений для города city
+  /favorite:
+    get:
+      tags:
+        - favorite
+      summary: Получение списка предложений, добавленных в избранное
+      description: Возвращает список предложений, добавленных в избранное
+  /favorite/${offerId}/${status}:
+    post:
+      tags:
+        - favorite
+      summary: Добавление/удаление предложения в/из избранное
+      description: Добавляет или удаляет предложение с идентфикатором offerId в/из избранное
+
+
+
+
