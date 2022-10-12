@@ -186,6 +186,23 @@ components:
           latitude: 48.85661,
           longitude: 2.351499
         }
+      required:
+        - offerName
+        - description
+        - date
+        - city
+        - preview
+        - photos
+        - premium
+        - favorite
+        - rating
+        - housingType
+        - roomCount
+        - guestCount
+        - price
+        - conveniences
+        - authorId
+        - coordinates
 
     createComment:
       type: object
@@ -203,6 +220,11 @@ components:
         date: 2022-10-08T15:54:55.753Z
         rating: 5
         authorId: 63444076b02202c8cf068385
+      required:
+        - text
+        - date
+        - rating
+        - authorId
 
 
 
