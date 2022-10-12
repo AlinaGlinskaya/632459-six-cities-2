@@ -96,6 +96,11 @@ paths:
       summary: Добавление/удаление предложения в/из избранное
       description: Добавляет или удаляет предложение с идентфикатором offerId в/из избранное
 
+# components:
+#   schemas:
+#     createUser:
+
+
 
 
 
