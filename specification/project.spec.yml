@@ -226,6 +226,98 @@ components:
         - rating
         - authorId
 
+    offer:
+      type: object
+      properties:
+        id:
+          type: string
+        offerName:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+        city:
+          type: string
+        preview:
+          type: string
+        photos:
+          type: array
+        premium:
+          type: boolean
+        favorite:
+          type: boolean
+        rating:
+          type: number
+        housingType:
+          type: string
+        roomCount:
+          type: integer
+        guestCount:
+          type: integer
+        price:
+          type: integer
+        conveniences:
+          type: array
+        authorId:
+          type: string
+        commentsCount:
+          type: integer
+        coordinates:
+          type: object
+      example:
+        id:  63444077b02202c8cf068388
+        offerName: Studio
+        description: Canal View Prinsengracht
+        date: 2022-10-08T15:54:55.753Z
+        city: Paris
+        preview: https://i.com/0
+        photos: [
+          https://i.com/0,
+          https://i.com/1,
+          https://i.com/2,
+          https://i.com/3,
+          https://i.com/4,
+          https://i.com/5
+        ]
+        housingType: Apartment
+        roomCount: 1
+        guestCount: 1
+        price: 10000
+        conveniences: [
+          Breakfast,
+          Air conditioning
+        ]
+        authorId: 63444076b02202c8cf068385
+        commentsCount: 2
+        coordinates: {
+          latitude: 48.85661,
+          longitude: 2.351499
+        }
+
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+        avatarPath:
+          type: string
+        password:
+          type: string
+        userStatus:
+          type: string
+      example:
+        id: 63444076b02202c8cf068385
+        userName: John
+        email: johnwalker@mail.local
+        avatarPath: ava1.jpg
+        password: 123
+        userStatus: Common
+
 
 
 
