@@ -121,52 +121,173 @@ paths:
       summary: Получение списка комментариев для предложения
       description: Возвращает список комментариев для предложения с идентификатором offerId
 
+      responses:
+        '200':
+          description: Комментарии получены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comments'
+
     post:
       tags:
         - comments
       summary: Добавление комментария для предложения
       description: Добавляет комментарий к предложению с идентификатором offerId
+      requestBody:
+        description: Информация для создания нового комментария
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+        required: true
+
+      responses:
+        '201':
+          description: Комментарий создан. Объект комментария
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        '400':
+          description: Некорректный запрос к серверу
+        '401':
+          description: Пользователь неавторизован
+
+
   /users/register:
     post:
       tags:
         - users
       summary: Создание нового пользователя
       description: Создает нового пользователя
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        '201':
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Некорректный запрос к серверу
+        '409':
+          description: Пользователь с таким email уже существует.
+
   /users/login:
     post:
       tags:
         - users
       summary: Вход в закрытую часть приложения
       description: Авторизует пользователя на основе логина и пароля
+      requestBody:
+        description: Информация для авторизации
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+
+      responses:
+        '200':
+          description: Пользователь успешно авторизован
+          headers:
+            X-Token:
+              description: Токен пользователя
+              schema:
+                type: string
+        '400':
+          description: Некорректный запрос к серверу
+
     get:
       tags:
         - users
       summary: Проверка состояния пользователя
       description: Возвращает информацию о пользователе в случае успешной проверки логина и пароля
+      requestBody:
+        description: Информация для проверки авторизации
+        content:
+            X-Token:
+              schema:
+                type: string
+
+      responses:
+        '200':
+          description: Пользователь авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Пользователь не авторизован
+
+
   /users/logout:
     delete:
       tags:
         - users
       summary: Выход из закрытой части приложения
       description: Завершает сеанс, если токен прошел проверку
+      requestBody:
+        description: Информация для выхода из закрытой части приложения
+        content:
+            X-Token:
+              schema:
+                type: string
+
+      responses:
+        '204':
+          description: Сеанс завершен
+
+
   /offers/premium/${city}:
     get:
       tags:
         - offers
       summary: Получение списка премиальных предложений для города
       description: Возвращает список предложений для города city
+
+      responses:
+        '200':
+          description: Список предложений получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
   /favorite:
     get:
       tags:
         - favorite
       summary: Получение списка предложений, добавленных в избранное
       description: Возвращает список предложений, добавленных в избранное
+
+      responses:
+        '200':
+          description: Список предложений получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
   /favorite/${offerId}/${status}:
     post:
       tags:
         - favorite
       summary: Добавление/удаление предложения в/из избранное
       description: Добавляет или удаляет предложение с идентфикатором offerId в/из избранное
+
+      responses:
+        '200':
+          description: Статус предложения изменен
+        '401':
+          description: Пользователь не авторизован
 
 components:
   schemas:
@@ -431,11 +552,45 @@ components:
         password: 123
         userStatus: Common
 
+    comment:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        date:
+          type: string
+        rating:
+          type: integer
+        authorId:
+          type: string
+      example:
+        id: 63444076b02202c8cf068385
+        text: A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam
+        date: 2022-10-08T15:54:55.753Z
+        rating: 5
+        authorId: 63444076b02202c8cf068385
+
+    loginUser:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
     offers:
       type: array
       items:
         anyOf:
           - $ref: '#/components/schemas/shortOffer'
+
+    comments:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/comment'
 
 
 
