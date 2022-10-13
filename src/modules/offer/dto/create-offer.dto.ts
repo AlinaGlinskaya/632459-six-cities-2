@@ -1,5 +1,4 @@
 import { City } from '../../../types/city.enum.js';
-import { Convenience } from '../../../types/convenience.type.js';
 import { Coordinate } from '../../../types/coordinate.type.js';
 import { HousingType } from '../../../types/housing-type.enum.js';
 
@@ -17,7 +16,7 @@ export default class CreateOfferDto {
   public roomCount!: number;
   public guestCount!: number;
   public price!: number;
-  public conveniences!: Convenience[];
+  public conveniences!: string[];
   public authorId!: string;
   public coordinates!: Coordinate;
 }

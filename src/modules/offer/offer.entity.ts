@@ -1,22 +1,24 @@
-import typegoose, {getModelForClass, defaultClasses, Ref, Severity} from '@typegoose/typegoose';
+import typegoose, {getModelForClass, defaultClasses, Ref} from '@typegoose/typegoose';
 import {Rating, RoomCount, GuestCount, Price } from '../../const.js';
 import { City } from '../../types/city.enum.js';
 import { HousingType } from '../../types/housing-type.enum.js';
-import { Convenience } from '../../types/convenience.type.js';
-import { Coordinate } from '../../types/coordinate.type.js';
 import { UserEntity } from '../user/user.entity.js';
-import mongoose from 'mongoose';
 
 const {prop, modelOptions} = typegoose;
 
 export interface OfferEntity extends defaultClasses.Base {}
 
+class Coordinate {
+  @prop()
+  public latitude!: number;
+
+  @prop()
+  public longitude!: number;
+}
+
 @modelOptions({
   schemaOptions: {
     collection: 'offers',
-  },
-  options: {
-    allowMixed: Severity.ALLOW,
   }
 })
 
@@ -36,7 +38,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public preview!: string;
 
-  @prop({required: true})
+  @prop({required: true, type: [String]})
   public photos!: string[];
 
   @prop({required: true})
@@ -60,8 +62,8 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true, min: Price.MIN, max: Price.MAX})
   public price!: number;
 
-  @prop({required: true, type: mongoose.Schema.Types.Mixed})
-  public conveniences!: Convenience[];
+  @prop({required: true, type: [String]})
+  public conveniences!: string[];
 
   @prop({required: true, ref: UserEntity})
   public authorId!: Ref<UserEntity>;
@@ -69,7 +71,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({default: 0})
   public commentsCount!: number;
 
-  @prop({required: true, type: mongoose.Schema.Types.Mixed})
+  @prop({required: true, type: Coordinate})
   public coordinates!: Coordinate;
 }
 

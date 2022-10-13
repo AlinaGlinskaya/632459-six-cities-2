@@ -51,7 +51,7 @@ export const createOffer = (row: string) => {
     guestCount: Number.parseInt(guestCount, 10),
     price: Number.parseInt(price, 10),
     conveniences: conveniences.split(';')
-      .map((name) => ({name})),
+      .map((conv) => (conv)),
     author: {userName, email, avatarPath, password, userStatus: userStatus as UserStatus},
     coordinates: parseLocation(coordinates.split(';')),
   } as Offer;

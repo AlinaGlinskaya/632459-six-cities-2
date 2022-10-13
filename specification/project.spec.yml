@@ -1,0 +1,601 @@
+openapi: 3.0.0
+info:
+  title: API сервер для учебного проекта «Шесть городов»
+  description: Список маршрутов и ресурсов сервера «Шесть городов»
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+tags:
+  - name: offers
+    description: Действия с предложениями аренды
+  - name: users
+    description: Действия с пользователями
+  - name: comments
+    description: Действия с комментариями
+  - name: favorite
+    description: Действия с избранным
+paths:
+  /offers:
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения
+      description: Создает новое предложение аренды
+      requestBody:
+        description: Информация для создания нового предложения
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        '201':
+          description: Предложение создано. Объект предложения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Некорректный запрос к серверу
+        '401':
+          description: Пользователь неавторизован
+
+    get:
+      tags:
+        - offers
+      summary: Получение списка предложений
+      description: Возвращает список предложений по аренде
+
+      responses:
+        '200':
+          description: Список предложений получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+
+  /offers/${offerId}:
+    put:
+      tags:
+        - offers
+      summary: Редактирование предложения
+      description: Редактирует существующее предложение с идентификатором offerId
+      requestBody:
+        description: Информация для редактирования предложения
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        '200':
+          description: Обновленное предложение
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Некорректный запрос к серверу
+        '401':
+          description: Пользователь неавторизован
+        '403':
+          description: Нет прав редактировать данное предложение
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения
+      description: Удаляет существующее предложение с идентификатором offerId
+
+      responses:
+        '200':
+          description: Предложение удалено
+        '401':
+          description: Пользователь неавторизован
+        '403':
+          description: Нет прав редактировать данное предложение
+
+    get:
+      tags:
+      - offers
+      summary: Получение детальной информации о предложении
+      description: Возвращает детальную информацию о предложении с идентификатором offerId
+
+      responses:
+        '200':
+          description: Предложение получено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+
+  /comments/${offerId}:
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев для предложения
+      description: Возвращает список комментариев для предложения с идентификатором offerId
+
+      responses:
+        '200':
+          description: Комментарии получены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comments'
+
+    post:
+      tags:
+        - comments
+      summary: Добавление комментария для предложения
+      description: Добавляет комментарий к предложению с идентификатором offerId
+      requestBody:
+        description: Информация для создания нового комментария
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+        required: true
+
+      responses:
+        '201':
+          description: Комментарий создан. Объект комментария
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        '400':
+          description: Некорректный запрос к серверу
+        '401':
+          description: Пользователь неавторизован
+
+
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Создание нового пользователя
+      description: Создает нового пользователя
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        '201':
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Некорректный запрос к серверу
+        '409':
+          description: Пользователь с таким email уже существует.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Вход в закрытую часть приложения
+      description: Авторизует пользователя на основе логина и пароля
+      requestBody:
+        description: Информация для авторизации
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+
+      responses:
+        '200':
+          description: Пользователь успешно авторизован
+          headers:
+            X-Token:
+              description: Токен пользователя
+              schema:
+                type: string
+        '400':
+          description: Некорректный запрос к серверу
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию о пользователе в случае успешной проверки логина и пароля
+      requestBody:
+        description: Информация для проверки авторизации
+        content:
+            X-Token:
+              schema:
+                type: string
+
+      responses:
+        '200':
+          description: Пользователь авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Пользователь не авторизован
+
+
+  /users/logout:
+    delete:
+      tags:
+        - users
+      summary: Выход из закрытой части приложения
+      description: Завершает сеанс, если токен прошел проверку
+      requestBody:
+        description: Информация для выхода из закрытой части приложения
+        content:
+            X-Token:
+              schema:
+                type: string
+
+      responses:
+        '204':
+          description: Сеанс завершен
+
+
+  /offers/premium/${city}:
+    get:
+      tags:
+        - offers
+      summary: Получение списка премиальных предложений для города
+      description: Возвращает список предложений для города city
+
+      responses:
+        '200':
+          description: Список предложений получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+  /favorite:
+    get:
+      tags:
+        - favorite
+      summary: Получение списка предложений, добавленных в избранное
+      description: Возвращает список предложений, добавленных в избранное
+
+      responses:
+        '200':
+          description: Список предложений получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+  /favorite/${offerId}/${status}:
+    post:
+      tags:
+        - favorite
+      summary: Добавление/удаление предложения в/из избранное
+      description: Добавляет или удаляет предложение с идентфикатором offerId в/из избранное
+
+      responses:
+        '200':
+          description: Статус предложения изменен
+        '401':
+          description: Пользователь не авторизован
+
+components:
+  schemas:
+
+    createUser:
+      type: object
+      properties:
+        userName:
+          type: string
+        email:
+          type: string
+        avatarPath:
+          type: string
+        password:
+          type: string
+        userStatus:
+          type: string
+      example:
+        userName: John
+        email: johnwalker@mail.local
+        avatarPath: ava1.jpg
+        password: 123
+        userStatus: Common
+      required:
+        - userName
+        - email
+        - password
+        - userStatus
+
+    createOffer:
+      type: object
+      properties:
+        offerName:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+        city:
+          type: string
+        preview:
+          type: string
+        photos:
+          type: array
+        premium:
+          type: boolean
+        favorite:
+          type: boolean
+        rating:
+          type: number
+        housingType:
+          type: string
+        roomCount:
+          type: integer
+        guestCount:
+          type: integer
+        price:
+          type: integer
+        conveniences:
+          type: array
+        authorId:
+          type: string
+        coordinates:
+          type: object
+      example:
+        offerName: Studio
+        description: Canal View Prinsengracht
+        date: 2022-10-08T15:54:55.753Z
+        city: Paris
+        preview: https://i.com/0
+        photos: [
+          https://i.com/0,
+          https://i.com/1,
+          https://i.com/2,
+          https://i.com/3,
+          https://i.com/4,
+          https://i.com/5
+        ]
+        housingType: Apartment
+        roomCount: 1
+        guestCount: 1
+        price: 10000
+        conveniences: [
+          Breakfast,
+          Air conditioning
+        ]
+        authorId: 63444076b02202c8cf068385
+        coordinates: {
+          latitude: 48.85661,
+          longitude: 2.351499
+        }
+      required:
+        - offerName
+        - description
+        - date
+        - city
+        - preview
+        - photos
+        - premium
+        - favorite
+        - rating
+        - housingType
+        - roomCount
+        - guestCount
+        - price
+        - conveniences
+        - authorId
+        - coordinates
+
+    createComment:
+      type: object
+      properties:
+        text:
+          type: string
+        date:
+          type: string
+        rating:
+          type: integer
+        authorId:
+          type: string
+      example:
+        text: A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam
+        date: 2022-10-08T15:54:55.753Z
+        rating: 5
+        authorId: 63444076b02202c8cf068385
+      required:
+        - text
+        - date
+        - rating
+        - authorId
+
+    offer:
+      type: object
+      properties:
+        id:
+          type: string
+        offerName:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+        city:
+          type: string
+        preview:
+          type: string
+        photos:
+          type: array
+        premium:
+          type: boolean
+        favorite:
+          type: boolean
+        rating:
+          type: number
+        housingType:
+          type: string
+        roomCount:
+          type: integer
+        guestCount:
+          type: integer
+        price:
+          type: integer
+        conveniences:
+          type: array
+        authorId:
+          type: string
+        commentsCount:
+          type: integer
+        coordinates:
+          type: object
+      example:
+        id:  63444077b02202c8cf068388
+        offerName: Studio
+        description: Canal View Prinsengracht
+        date: 2022-10-08T15:54:55.753Z
+        city: Paris
+        preview: https://i.com/0
+        photos: [
+          https://i.com/0,
+          https://i.com/1,
+          https://i.com/2,
+          https://i.com/3,
+          https://i.com/4,
+          https://i.com/5
+        ]
+        premium: false
+        favorite: true
+        rating: 5
+        housingType: Apartment
+        roomCount: 1
+        guestCount: 1
+        price: 10000
+        conveniences: [
+          Breakfast,
+          Air conditioning
+        ]
+        authorId: 63444076b02202c8cf068385
+        commentsCount: 2
+        coordinates: {
+          latitude: 48.85661,
+          longitude: 2.351499
+        }
+
+    shortOffer:
+      type: object
+      properties:
+        id:
+          type: string
+        offerName:
+          type: string
+        date:
+          type: string
+        city:
+          type: string
+        preview:
+          type: string
+        premium:
+          type: boolean
+        favorite:
+          type: boolean
+        rating:
+          type: number
+        housingType:
+          type: string
+        price:
+          type: integer
+        commentsCount:
+          type: integer
+      example:
+        id:  63444077b02202c8cf068388
+        offerName: Studio
+        date: 2022-10-08T15:54:55.753Z
+        city: Paris
+        preview: https://i.com/0
+        premium: false
+        favorite: true
+        rating: 5
+        housingType: Apartment
+        price: 10000
+        commentsCount: 2
+
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+        userName:
+          type: string
+        email:
+          type: string
+        avatarPath:
+          type: string
+        password:
+          type: string
+        userStatus:
+          type: string
+      example:
+        id: 63444076b02202c8cf068385
+        userName: John
+        email: johnwalker@mail.local
+        avatarPath: ava1.jpg
+        password: 123
+        userStatus: Common
+
+    comment:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        date:
+          type: string
+        rating:
+          type: integer
+        authorId:
+          type: string
+      example:
+        id: 63444076b02202c8cf068385
+        text: A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam
+        date: 2022-10-08T15:54:55.753Z
+        rating: 5
+        authorId: 63444076b02202c8cf068385
+
+    loginUser:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    offers:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/shortOffer'
+
+    comments:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/comment'
+
+
+
+
+
+
+
+
