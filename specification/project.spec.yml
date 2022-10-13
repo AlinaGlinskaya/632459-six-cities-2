@@ -22,33 +22,105 @@ paths:
         - offers
       summary: Создание нового предложения
       description: Создает новое предложение аренды
+      requestBody:
+        description: Информация для создания нового предложения
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        '201':
+          description: Предложение создано. Объект предложения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Некорректный запрос к серверу
+        '401':
+          description: Пользователь неавторизован
+
     get:
       tags:
         - offers
       summary: Получение списка предложений
       description: Возвращает список предложений по аренде
+
+      responses:
+        '200':
+          description: Список предложений получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+
   /offers/${offerId}:
     put:
       tags:
         - offers
       summary: Редактирование предложения
       description: Редактирует существующее предложение с идентификатором offerId
+      requestBody:
+        description: Информация для редактирования предложения
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        '200':
+          description: Обновленное предложение
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Некорректный запрос к серверу
+        '401':
+          description: Пользователь неавторизован
+        '403':
+          description: Нет прав редактировать данное предложение
+
     delete:
       tags:
         - offers
       summary: Удаление предложения
       description: Удаляет существующее предложение с идентификатором offerId
+
+      responses:
+        '200':
+          description: Предложение удалено
+        '401':
+          description: Пользователь неавторизован
+        '403':
+          description: Нет прав редактировать данное предложение
+
     get:
       tags:
       - offers
       summary: Получение детальной информации о предложении
       description: Возвращает детальную информацию о предложении с идентификатором offerId
+
+      responses:
+        '200':
+          description: Предложение получено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+
   /comments/${offerId}:
     get:
       tags:
         - comments
       summary: Получение списка комментариев для предложения
       description: Возвращает список комментариев для предложения с идентификатором offerId
+
     post:
       tags:
         - comments
@@ -280,6 +352,9 @@ components:
           https://i.com/4,
           https://i.com/5
         ]
+        premium: false
+        favorite: true
+        rating: 5
         housingType: Apartment
         roomCount: 1
         guestCount: 1
@@ -294,6 +369,44 @@ components:
           latitude: 48.85661,
           longitude: 2.351499
         }
+
+    shortOffer:
+      type: object
+      properties:
+        id:
+          type: string
+        offerName:
+          type: string
+        date:
+          type: string
+        city:
+          type: string
+        preview:
+          type: string
+        premium:
+          type: boolean
+        favorite:
+          type: boolean
+        rating:
+          type: number
+        housingType:
+          type: string
+        price:
+          type: integer
+        commentsCount:
+          type: integer
+      example:
+        id:  63444077b02202c8cf068388
+        offerName: Studio
+        date: 2022-10-08T15:54:55.753Z
+        city: Paris
+        preview: https://i.com/0
+        premium: false
+        favorite: true
+        rating: 5
+        housingType: Apartment
+        price: 10000
+        commentsCount: 2
 
     user:
       type: object
@@ -317,6 +430,12 @@ components:
         avatarPath: ava1.jpg
         password: 123
         userStatus: Common
+
+    offers:
+      type: array
+      items:
+        anyOf:
+          - $ref: '#/components/schemas/shortOffer'
 
 
 
