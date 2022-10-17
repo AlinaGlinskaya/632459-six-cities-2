@@ -5,7 +5,9 @@ import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { types } from '@typegoose/typegoose';
 import { OfferEntity } from './offer.entity.js';
 import createOfferDto from './dto/create-offer.dto.js';
+import { OFFERS_LIMIT } from '../../const.js';
 import chalk from 'chalk';
+import updateOfferDto from './dto/update-offer.dto.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -21,6 +23,28 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   public async findById(id: string): Promise<types.DocumentType<OfferEntity> | null> {
-    return this.offerModel.findById(id).exec();
+    return this.offerModel
+      .findById(id)
+      .populate('authorId')
+      .exec();
+  }
+
+  public async find(): Promise<types.DocumentType<OfferEntity>[]> {
+    return this.offerModel.find().limit(OFFERS_LIMIT);
+  }
+
+  public async updateById(id: string, dto: updateOfferDto): Promise<types.DocumentType<OfferEntity> | null> {
+    return this.offerModel
+      .findByIdAndUpdate(id, dto, {new: true})
+      .populate('authorId')
+      .exec();
+  }
+
+  public async deleteById(id: string): Promise<types.DocumentType<OfferEntity, types.BeAnObject> | null> {
+    return this.offerModel
+      .findByIdAndDelete(id)
+      .exec();
   }
 }
+
+

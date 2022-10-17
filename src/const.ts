@@ -29,3 +29,4 @@ export enum UsernameLength {
 }
 
 export const HOUSE_PHOTO_COUNT = 6;
+export const OFFERS_LIMIT = 60;
