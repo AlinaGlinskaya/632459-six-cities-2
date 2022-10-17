@@ -8,6 +8,7 @@ import createOfferDto from './dto/create-offer.dto.js';
 import { OFFERS_LIMIT } from '../../const.js';
 import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
+import { SortType } from '../../const.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -18,7 +19,6 @@ export default class OfferService implements OfferServiceInterface {
   public async create(dto: createOfferDto): Promise<types.DocumentType<OfferEntity>> {
     const result = await this.offerModel.create(dto);
     this.logger.info(chalk.green(`Offer ${dto.offerName} created.`));
-
     return result;
   }
 
@@ -29,8 +29,13 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async find(): Promise<types.DocumentType<OfferEntity>[]> {
-    return this.offerModel.find().limit(OFFERS_LIMIT);
+  public async find(count?: number): Promise<types.DocumentType<OfferEntity>[]> {
+    const limit = count ?? OFFERS_LIMIT;
+    return this.offerModel
+      .find()
+      .sort({createdAt: SortType.Down})
+      .limit(limit)
+      .exec();
   }
 
   public async updateById(id: string, dto: updateOfferDto): Promise<types.DocumentType<OfferEntity> | null> {
