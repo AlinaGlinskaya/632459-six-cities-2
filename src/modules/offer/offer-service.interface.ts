@@ -2,6 +2,7 @@ import CreateOfferDto from './dto/create-offer.dto.js';
 import { OfferEntity } from './offer.entity.js';
 import { DocumentType } from '@typegoose/typegoose';
 import UpdateOfferDto from './dto/update-offer.dto.js';
+import { City } from '../../types/city.enum.js';
 
 export interface OfferServiceInterface {
   create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>>;
@@ -9,4 +10,5 @@ export interface OfferServiceInterface {
   find(count?: number): Promise<DocumentType<OfferEntity>[]>;
   updateById(id: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
   deleteById(id: string): Promise<DocumentType<OfferEntity> | null>;
+  findPremiumByCity(city: City): Promise<DocumentType<OfferEntity>[]>;
 }

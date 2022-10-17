@@ -8,7 +8,8 @@ import createOfferDto from './dto/create-offer.dto.js';
 import { OFFERS_LIMIT } from '../../const.js';
 import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
-import { SortType } from '../../const.js';
+import { SortType, PREMIUM_OFFERS_LIMIT, shortOfferFields } from '../../const.js';
+import { City } from '../../types/city.enum.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -35,6 +36,7 @@ export default class OfferService implements OfferServiceInterface {
       .find()
       .sort({createdAt: SortType.Down})
       .limit(limit)
+      .select(shortOfferFields)
       .exec();
   }
 
@@ -45,9 +47,18 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async deleteById(id: string): Promise<types.DocumentType<OfferEntity, types.BeAnObject> | null> {
+  public async deleteById(id: string): Promise<types.DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndDelete(id)
+      .exec();
+  }
+
+  public async findPremiumByCity(city: City): Promise<types.DocumentType<OfferEntity>[]> {
+    return this.offerModel
+      .find({city: city, premium: true})
+      .sort({createdAt: SortType.Down})
+      .limit(PREMIUM_OFFERS_LIMIT)
+      .select(shortOfferFields)
       .exec();
   }
 }
