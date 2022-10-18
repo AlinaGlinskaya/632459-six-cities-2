@@ -23,9 +23,9 @@ export default class OfferService implements OfferServiceInterface {
     return result;
   }
 
-  public async findById(id: string): Promise<types.DocumentType<OfferEntity> | null> {
+  public async findById(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
     return this.offerModel
-      .findById(id)
+      .findById(offerId)
       .populate('authorId')
       .exec();
   }
@@ -40,16 +40,16 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async updateById(id: string, dto: updateOfferDto): Promise<types.DocumentType<OfferEntity> | null> {
+  public async updateById(offerId: string, dto: updateOfferDto): Promise<types.DocumentType<OfferEntity> | null> {
     return this.offerModel
-      .findByIdAndUpdate(id, dto, {new: true})
+      .findByIdAndUpdate(offerId, dto, {new: true})
       .populate('authorId')
       .exec();
   }
 
-  public async deleteById(id: string): Promise<types.DocumentType<OfferEntity> | null> {
+  public async deleteById(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
     return this.offerModel
-      .findByIdAndDelete(id)
+      .findByIdAndDelete(offerId)
       .exec();
   }
 
@@ -60,6 +60,23 @@ export default class OfferService implements OfferServiceInterface {
       .limit(PREMIUM_OFFERS_LIMIT)
       .select(shortOfferFields)
       .exec();
+  }
+
+  public async findFavorites(): Promise<types.DocumentType<OfferEntity>[]> {
+    return this.offerModel
+      .find();
+  }
+
+  public async addToFavorites(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
+    return this.offerModel.findByIdAndUpdate(offerId, {'$set': {favorite: true}});
+  }
+
+  public async removeFromFavorites(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
+    return this.offerModel.findByIdAndUpdate(offerId, {'$set': {favorite: false}});
+  }
+
+  public async incCommentCount(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
+    return this.offerModel.findByIdAndUpdate(offerId, {'$inc': {commentCount: 1}});
   }
 }
 

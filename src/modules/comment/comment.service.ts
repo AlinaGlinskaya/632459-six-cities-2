@@ -21,9 +21,9 @@ export default class CommentService implements CommentServiceInterface {
     return comment.populate('authorId');
   }
 
-  public async findByOfferId(id: string): Promise<types.DocumentType<CommentEntity>[]> {
+  public async findByOfferId(offerId: string): Promise<types.DocumentType<CommentEntity>[]> {
     return this.commentModel
-      .find({id})
+      .find({offerId})
       .sort({createdAt: SortType.Down})
       .limit(COMMENTS_LIMIT)
       .populate('authorId')

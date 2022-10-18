@@ -469,7 +469,7 @@ components:
           type: array
         authorId:
           type: string
-        commentsCount:
+        commentCount:
           type: integer
         coordinates:
           type: object
@@ -500,7 +500,7 @@ components:
           Air conditioning
         ]
         authorId: 63444076b02202c8cf068385
-        commentsCount: 2
+        commentCount: 2
         coordinates: {
           latitude: 48.85661,
           longitude: 2.351499
@@ -529,7 +529,7 @@ components:
           type: string
         price:
           type: integer
-        commentsCount:
+        :
           type: integer
       example:
         id:  63444077b02202c8cf068388
@@ -542,7 +542,7 @@ components:
         rating: 5
         housingType: Apartment
         price: 10000
-        commentsCount: 2
+        commentCount: 2
 
     user:
       type: object

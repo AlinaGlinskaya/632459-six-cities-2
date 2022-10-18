@@ -6,9 +6,13 @@ import { City } from '../../types/city.enum.js';
 
 export interface OfferServiceInterface {
   create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>>;
-  findById(id: string): Promise<DocumentType<OfferEntity> | null>;
+  findById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   find(count?: number): Promise<DocumentType<OfferEntity>[]>;
-  updateById(id: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
-  deleteById(id: string): Promise<DocumentType<OfferEntity> | null>;
+  updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
+  deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   findPremiumByCity(city: City): Promise<DocumentType<OfferEntity>[]>;
+  findFavorites(): Promise<DocumentType<OfferEntity>[]>;
+  addToFavorites(offerId: string): Promise<DocumentType<OfferEntity> | null>;
+  removeFromFavorites(offerId: string): Promise<DocumentType<OfferEntity> | null>;
+  incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
 }
