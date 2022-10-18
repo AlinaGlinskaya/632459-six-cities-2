@@ -265,12 +265,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/offers'
 
-  /favorite:
+  /favorite/${userId}:
     get:
       tags:
         - favorite
       summary: Получение списка предложений, добавленных в избранное
-      description: Возвращает список предложений, добавленных в избранное
+      description: Возвращает список предложений, добавленных в избранное пользователем с идентификатором userId
 
       responses:
         '200':
@@ -280,12 +280,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/offers'
 
-  /favorite/${offerId}:
+  /favorite/${userId}/${offerId}:
     post:
       tags:
         - favorite
       summary: Добавление предложения в избранное
-      description: Добавляет предложение с идентфикатором offerId в избранное
+      description: Добавляет предложение с идентфикатором offerId в избранное пользователя с идентификатором userId
 
       responses:
         '200':
@@ -297,6 +297,7 @@ paths:
         - favorite
       summary: Удаление предложения из избранного
       description: Удаляет предложение с идентификатором offerId из избранного
+                    пользователя с идентификатором userId
 
       responses:
         '200':

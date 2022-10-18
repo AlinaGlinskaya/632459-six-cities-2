@@ -62,17 +62,22 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async findFavorites(): Promise<types.DocumentType<OfferEntity>[]> {
+  public async findFavorites(userId: string): Promise<types.DocumentType<OfferEntity>[]> {
     return this.offerModel
-      .find();
-  }
-
-  public async addToFavorites(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
-    return this.offerModel.findByIdAndUpdate(offerId, {'$set': {favorite: true}});
-  }
-
-  public async removeFromFavorites(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
-    return this.offerModel.findByIdAndUpdate(offerId, {'$set': {favorite: false}});
+      .aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            let: {offerId: '$_id'},
+            foreignField: userId,
+            pipeline: [
+              {$match: { $expr: { $in: ['$$offerId', '$favorite']}}}
+            ],
+            as: 'favorite'
+          }
+        }
+      ])
+      .exec();
   }
 
   public async incCommentCount(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
