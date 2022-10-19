@@ -10,12 +10,14 @@ import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
 import { SortType, PREMIUM_OFFERS_LIMIT, shortOfferFields } from '../../const.js';
 import { City } from '../../types/city.enum.js';
+import { CommentEntity } from '../comment/comment.entity.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
   constructor(
     @inject(Component.LoggerInterface) private readonly logger: LoggerInterface,
-    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>) {}
+    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>) {}
 
   public async create(dto: createOfferDto): Promise<types.DocumentType<OfferEntity>> {
     const result = await this.offerModel.create(dto);
@@ -62,48 +64,21 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async findFavorites(userId: string): Promise<types.DocumentType<OfferEntity>[]> {
-    return this.offerModel.aggregate([
-      {
-        $lookup: {
-          from: 'users',
-          let: {offerId: '$_id'},
-          pipeline: [
-            {$match: {$expr: {$in: ['$$offerId', '$favorites']}}}
-          ],
-          as: 'favorites'
-        },
-      },
-      { $unset: ['date', 'city', 'premium', 'photos', 'conveniences', 'coordinates'] },
-      { $limit: 3},
-    ]).exec();
-  }
-
   public async incCommentCount(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
     return this.offerModel.findByIdAndUpdate(offerId, {'$inc': {commentCount: 1}});
   }
 
-  // public async calculateRating(offerId: string, commentId: string): Promise<types.DocumentType<OfferEntity> | null> {
-  //   let updatedRating;
-  //   const newCommentRating = await this.offerModel.aggregate([
-  //     {
-  //       $lookup: {
-  //         from: 'comments',
-  //         let: { offerId: '$offerId'},
-  //         pipeline: [
-  //           {$match: {$eq: ['$$commentId', commentId]}}
-  //         ],
-  //         as: 'comment'
-  //       }
-  //     }
-  //   ]);
-  //   const ratingInfo = this.offerModel.findById(offerId).select('rating commentCount');
-  //   if (!ratingInfo?.rating) {
-  //     updatedRating = 2;
-  //   } else {
-
-  //   }
-  // }
+  public async calculateRating(offerId: string, commentId: string): Promise<types.DocumentType<OfferEntity> | null> {
+    let updatedRating;
+    const newCommentRating = await this.commentModel.findById(commentId).select('rating');
+    const ratingInfo = this.offerModel.findById(offerId).select('rating commentCount');
+    if (!ratingInfo?.rating) {
+      updatedRating = newCommentRating;
+    } else {
+      updatedRating = ((ratingInfo.rating * ratingInfo.commentCount) + Number(newCommentRating)) / (ratingInfo.commentCount + 1);
+    }
+    return this.offerModel.findByIdAndUpdate(offerId, {'$set': {rating: updatedRating}});
+  }
 }
 
 
