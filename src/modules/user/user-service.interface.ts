@@ -9,6 +9,7 @@ export interface UserServiceInterface {
   findById(userId: string): Promise <DocumentType<UserEntity> | null>;
   findByEmail(email: string): Promise <DocumentType<UserEntity> | null>;
   updateById(userId: string, dto: UpdateUserDto): Promise <DocumentType<UserEntity> | null>;
+  findFavorites(userId: string): Promise <string[] | null>;
   addToFavorites(userId: string, offerId: string): Promise<DocumentType<UserEntity> | null>;
   removeFromFavorites(userId: string, offerId: string): Promise<DocumentType<UserEntity> | null>;
 }
