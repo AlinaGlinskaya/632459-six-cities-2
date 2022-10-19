@@ -30,9 +30,9 @@ export default class Application {
 
     await this.databaseClient.connect(uri);
 
-    const offers = await this.offerService.findFavorites('63444076b02202c8cf068385');
+    const favorites = await this.offerService.findFavorites('634ef0047bd6c921c282078b');
 
-    console.log(offers);
+    console.log(favorites);
   }
 
 

@@ -63,26 +63,47 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   public async findFavorites(userId: string): Promise<types.DocumentType<OfferEntity>[]> {
-    return this.offerModel
-      .aggregate([
-        {
-          $lookup: {
-            from: 'users',
-            let: {offerId: '$_id'},
-            foreignField: userId,
-            pipeline: [
-              {$match: { $expr: { $in: ['$$offerId', '$favorite']}}}
-            ],
-            as: 'favorite'
-          }
-        }
-      ])
-      .exec();
+    return this.offerModel.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          let: {offerId: '$_id'},
+          pipeline: [
+            {$match: {$expr: {$in: ['$$offerId', '$favorites']}}}
+          ],
+          as: 'favorites'
+        },
+      },
+      { $unset: ['date', 'city', 'premium', 'photos', 'conveniences', 'coordinates'] },
+      { $limit: 3},
+    ]).exec();
   }
 
   public async incCommentCount(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
     return this.offerModel.findByIdAndUpdate(offerId, {'$inc': {commentCount: 1}});
   }
+
+  // public async calculateRating(offerId: string, commentId: string): Promise<types.DocumentType<OfferEntity> | null> {
+  //   let updatedRating;
+  //   const newCommentRating = await this.offerModel.aggregate([
+  //     {
+  //       $lookup: {
+  //         from: 'comments',
+  //         let: { offerId: '$offerId'},
+  //         pipeline: [
+  //           {$match: {$eq: ['$$commentId', commentId]}}
+  //         ],
+  //         as: 'comment'
+  //       }
+  //     }
+  //   ]);
+  //   const ratingInfo = this.offerModel.findById(offerId).select('rating commentCount');
+  //   if (!ratingInfo?.rating) {
+  //     updatedRating = 2;
+  //   } else {
+
+  //   }
+  // }
 }
 
 

@@ -13,4 +13,5 @@ export interface OfferServiceInterface {
   findPremiumByCity(city: City): Promise<DocumentType<OfferEntity>[]>;
   findFavorites(userId: string): Promise<DocumentType<OfferEntity>[]>;
   incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null>;
+  //calculateRating(offerId: string, commentId: string): Promise<DocumentType<OfferEntity> | null>;
 }
