@@ -28,4 +28,23 @@ export enum UsernameLength {
   MAX = 15
 }
 
+export enum CommentLength {
+  MIN = 5,
+  MAX = 1024
+}
+
+export enum CommentRating {
+  MIN = 1,
+  MAX = 5
+}
+
+export enum SortType {
+  Down = -1,
+  Up = 1
+}
+
 export const HOUSE_PHOTO_COUNT = 6;
+export const OFFERS_LIMIT = 60;
+export const COMMENTS_LIMIT = 50;
+export const PREMIUM_OFFERS_LIMIT = 3;
+export const shortOfferFields = 'price offerName housingType favorite date city preview premium rating commentCount';

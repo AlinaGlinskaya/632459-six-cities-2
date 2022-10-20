@@ -7,6 +7,7 @@ import { inject, injectable } from 'inversify';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
 import chalk from 'chalk';
+import UpdateUserDto from './dto/update-user.dto.js';
 
 @injectable()
 export default class UserService implements UserServiceInterface {
@@ -27,8 +28,8 @@ export default class UserService implements UserServiceInterface {
     return this.userModel.findOne({email});
   }
 
-  public async findById(id: number): Promise<DocumentType<UserEntity, types.BeAnObject> | null> {
-    return this.userModel.findById({id});
+  public async findById(userId: string): Promise<DocumentType<UserEntity, types.BeAnObject> | null> {
+    return this.userModel.findById({userId});
   }
 
   public async findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
@@ -38,5 +39,21 @@ export default class UserService implements UserServiceInterface {
     }
 
     return this.create(dto, salt);
+  }
+
+  public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, dto, {new: true});
+  }
+
+  public async findFavorites(userId: string): Promise <string[] | null> {
+    return this.userModel.findById(userId, {favorites: 1, _id: 0});
+  }
+
+  public async addToFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, {'$push': {favorites: offerId}}, {new: true});
+  }
+
+  public async removeFromFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}}, {new: true});
   }
 }
