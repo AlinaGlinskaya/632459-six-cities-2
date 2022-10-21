@@ -3,6 +3,8 @@ import { City } from '../types/city.enum.js';
 import { HousingType } from '../types/housing-type.enum.js';
 import { UserStatus } from '../types/user-status.enum.js';
 import crypto from 'crypto';
+import { plainToInstance } from 'class-transformer';
+import { ClassConstructor } from 'class-transformer/types/interfaces/class-constructor.type.js';
 
 const parseLocation = (location: string[]) => {
   const [latitude, longitude] = location;
@@ -62,4 +64,8 @@ export const getErrorMessage = (error: unknown): string => error instanceof Erro
 export const createSHA256 = (password: string, salt: string) => {
   const shaHasher = crypto.createHmac('sha256', salt);
   return shaHasher.update(password).digest('hex');
+};
+
+export const fillDTO = <T,V>(dto: ClassConstructor<T>, plainObject: V ) => {
+  plainToInstance(dto, plainObject, {excludeExtraneousValues: true});
 };

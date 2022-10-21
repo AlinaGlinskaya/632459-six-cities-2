@@ -8,7 +8,7 @@ import createOfferDto from './dto/create-offer.dto.js';
 import { OFFERS_LIMIT } from '../../const.js';
 import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
-import { SortType, PREMIUM_OFFERS_LIMIT, shortOfferFields } from '../../const.js';
+import { SortType, PREMIUM_OFFERS_LIMIT } from '../../const.js';
 import { City } from '../../types/city.enum.js';
 import { CommentEntity } from '../comment/comment.entity.js';
 
@@ -38,7 +38,6 @@ export default class OfferService implements OfferServiceInterface {
       .find()
       .sort({createdAt: SortType.Down})
       .limit(limit)
-      .select(shortOfferFields)
       .exec();
   }
 
@@ -60,7 +59,6 @@ export default class OfferService implements OfferServiceInterface {
       .find({city: city, premium: true})
       .sort({createdAt: SortType.Down})
       .limit(PREMIUM_OFFERS_LIMIT)
-      .select(shortOfferFields)
       .exec();
   }
 

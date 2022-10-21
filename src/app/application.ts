@@ -6,7 +6,6 @@ import 'reflect-metadata';
 import { DatabaseInterface } from '../common/database-client/database.interface.js';
 import { getURI } from '../utils/db.js';
 import express, {Express} from 'express';
-import chalk from 'chalk';
 import { ControllerInterface } from '../common/controller/controller.interface.js';
 
 @injectable()
@@ -42,6 +41,6 @@ export default class Application {
 
     this.initRoutes();
     this.expressApp.listen(this.config.get('PORT'));
-    this.logger.info(chalk.blue(`Server started on http://localhost:${this.config.get('PORT')}`));
+    this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
   }
 }

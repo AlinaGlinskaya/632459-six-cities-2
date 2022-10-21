@@ -3,7 +3,6 @@ import {Response, Router} from 'express';
 import { injectable } from 'inversify';
 import { LoggerInterface } from '../logger/logger.interface.js';
 import { RouteInterface } from '../../types/route.interface.js';
-import chalk from 'chalk';
 import StatusCodes from 'http-status-codes';
 
 @injectable()
@@ -20,7 +19,7 @@ export abstract class Controller implements ControllerInterface {
 
   public addRoute(route: RouteInterface): void {
     this._router[route.method](route.path, route.handler.bind(this));
-    this.logger.info(chalk.blue(`Route registered: ${route.method.toUpperCase()} ${route.path}`));
+    this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
