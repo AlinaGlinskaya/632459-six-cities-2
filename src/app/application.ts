@@ -7,6 +7,7 @@ import { DatabaseInterface } from '../common/database-client/database.interface.
 import { getURI } from '../utils/db.js';
 import express, {Express} from 'express';
 import chalk from 'chalk';
+import { ControllerInterface } from '../common/controller/controller.interface.js';
 
 @injectable()
 export default class Application {
@@ -15,8 +16,13 @@ export default class Application {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.ConfigInterface) private config: ConfigInterface,
-    @inject(Component.DatabaseInterface) private databaseClient: DatabaseInterface) {
+    @inject(Component.DatabaseInterface) private databaseClient: DatabaseInterface,
+    @inject(Component.OfferController) private offerController: ControllerInterface) {
     this.expressApp = express();
+  }
+
+  public initRoutes() {
+    this.expressApp.use('/offers', this.offerController.router);
   }
 
   public async init() {
@@ -33,6 +39,8 @@ export default class Application {
     );
 
     await this.databaseClient.connect(uri);
+
+    this.initRoutes();
     this.expressApp.listen(this.config.get('PORT'));
     this.logger.info(chalk.blue(`Server started on http://localhost:${this.config.get('PORT')}`));
   }
