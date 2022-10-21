@@ -2,7 +2,7 @@ import {Expose} from 'class-transformer';
 import { City } from '../../../types/city.enum.js';
 import { HousingType } from '../../../types/housing-type.enum.js';
 
-export default class OfferResponse {
+export default class OfferShortResponse {
   @Expose()
   public offerName!: string;
 

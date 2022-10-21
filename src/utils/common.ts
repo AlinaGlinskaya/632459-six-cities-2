@@ -66,6 +66,5 @@ export const createSHA256 = (password: string, salt: string) => {
   return shaHasher.update(password).digest('hex');
 };
 
-export const fillDTO = <T,V>(dto: ClassConstructor<T>, plainObject: V ) => {
-  plainToInstance(dto, plainObject, {excludeExtraneousValues: true});
-};
+export const fillDTO = <T, V>(responseObject: ClassConstructor<T>, plainObject: V) =>
+  plainToInstance(responseObject, plainObject, {excludeExtraneousValues: true});
