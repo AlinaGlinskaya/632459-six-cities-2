@@ -26,7 +26,8 @@ export default class FavoriteController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
     @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
-    @inject(Component.UserServiceInterface) private readonly userService: UserServiceInterface) {
+    @inject(Component.UserServiceInterface) private readonly userService: UserServiceInterface
+  ) {
     super(logger);
 
     this.logger.info('Register routes for FavoriteController...');
