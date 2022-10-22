@@ -42,8 +42,8 @@ export default class FavoriteController extends Controller {
     const user = await this.userService.findFavoritesIds(userId);
     const favoriteIds = user?.favorites;
 
-    if (!favoriteIds) {
-      this.ok(res, favoriteIds);
+    if (!favoriteIds || favoriteIds.length === 0) {
+      this.ok(res, []);
     } else {
       const offers = await this.offerService.findFavoriteByIds(favoriteIds);
       this.ok(res, fillDTO(OfferResponse, offers));
