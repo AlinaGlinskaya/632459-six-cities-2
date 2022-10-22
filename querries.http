@@ -127,11 +127,27 @@ Content-Type: application/json
 }
 
 ###
+## Добавление предложения в избранное пользователя
+
+POST http://localhost:9000/favorite/6353af951d882a3a15cb4313/634ef0047bd6c921c28207a6 HTTP/1.1
+Content-Type: application/json
+
+###
+## Удаление предложения из избранного пользователя
+
+DELETE http://localhost:9000/favorite/6353af951d882a3a15cb4313/634ef0047bd6c921c28207a6 HTTP/1.1
+Content-Type: application/json
+
+###
 # Избранное
 ## Получение избранного по id пользователя
 
 GET http://localhost:9000/favorite/634ef0047bd6c921c282078b
 Content-Type: application/json
+
+
+
+
 
 
 
