@@ -98,6 +98,6 @@ export default class UserController extends Controller {
       );
     }
 
-    this.noContent(res);
+    this.noContent(res, existUser);
   }
 }

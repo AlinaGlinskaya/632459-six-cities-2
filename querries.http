@@ -11,7 +11,69 @@ Content-Type: application/json
 
 ###
 
-# Действия с пользователями
+## Получение предложения по id
+GET http://localhost:9000/offers/634ef0047bd6c921c28207a2 HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Удаление предложения по id
+DELETE http://localhost:9000/offers/6353da8a4594adbfdae292c2 HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Редактирование предложения по id
+PUT http://localhost:9000/offers/6353db49cd40c487f2da025c HTTP/1.1
+Content-Type: application/json
+
+{
+  "offerName": "Apartments",
+  "description": "Canal View Prinsengracht",
+  "date": "2022-05-12T11:56:37.573Z",
+  "city": "Paris",
+  "preview": "https://i.com/1",
+  "photos": ["https://i.com/4", "https://i.com/5"],
+  "premium": "true",
+  "favorite": "false",
+  "rating": "5",
+  "housingType": "House",
+  "roomCount": "2",
+  "guestCount": "2",
+  "price": "2000",
+  "conveniences": ["Washer", "Towels"],
+  "authorId": "634ef0047bd6c921c2820792",
+  "coordinates": {"latitude": "53.550341", "longitude": "4.895168"}
+}
+
+###
+
+## Создание предложения
+POST http://localhost:9000/offers HTTP/1.1
+Content-Type: application/json
+
+{
+  "offerName": "Apartments",
+  "description": "Canal View Prinsengracht",
+  "date": "2022-05-12T11:56:37.573Z",
+  "city": "Paris",
+  "preview": "https://i.com/1",
+  "photos": ["https://i.com/4", "https://i.com/5"],
+  "premium": "true",
+  "favorite": "false",
+  "rating": "5",
+  "housingType": "Room",
+  "roomCount": "2",
+  "guestCount": "2",
+  "price": "2000",
+  "conveniences": ["Washer", "Towels"],
+  "authorId": "634ef0047bd6c921c2820792",
+  "coordinates": {"latitude": "53.550341", "longitude": "4.895168"}
+}
+
+###
+
+# Пользователи
 ## Регистрация пользователя
 
 POST http://localhost:9000/users/register HTTP/1.1
@@ -27,7 +89,6 @@ Content-Type: application/json
 
 ###
 
-# Действия с пользователями
 ## Авторизация пользователя
 
 POST http://localhost:9000/users/login HTTP/1.1
@@ -40,7 +101,6 @@ Content-Type: application/json
 
 ###
 
-# Действия с пользователями
 ## Проверка статуса авторизации пользователя
 
 GET http://localhost:9000/users/login HTTP/1.1
@@ -49,3 +109,18 @@ Content-Type: application/json
 {
   "email": "mail@mail.local"
 }
+
+###
+
+## Выход из закрытой части приложения
+
+POST http://localhost:9000/users/logout HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "mail@mail.local"
+}
+
+
+
+
