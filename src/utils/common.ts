@@ -72,3 +72,10 @@ export const fillDTO = <T, V>(responseObject: ClassConstructor<T>, plainObject: 
 export const createErrorObject = (message: string) => ({
   error: message,
 });
+
+export const ucFirst = (str: string) => {
+  if (!str) {
+    return str;
+  }
+  return str[0].toUpperCase() + str.slice(1);
+};

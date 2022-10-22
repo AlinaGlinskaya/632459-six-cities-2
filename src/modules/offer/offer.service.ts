@@ -9,8 +9,8 @@ import { OFFERS_LIMIT } from '../../const.js';
 import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
 import { SortType, PREMIUM_OFFERS_LIMIT } from '../../const.js';
-import { City } from '../../types/city.enum.js';
 import { CommentEntity } from '../comment/comment.entity.js';
+import { ucFirst } from '../../utils/common.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -54,9 +54,10 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async findPremiumByCity(city: City): Promise<types.DocumentType<OfferEntity>[]> {
+  public async findPremiumByCity(city: string): Promise<types.DocumentType<OfferEntity>[]> {
+    const cityTitle = ucFirst(city);
     return this.offerModel
-      .find({city: city, premium: true})
+      .find({city: cityTitle, premium: true})
       .sort({createdAt: SortType.Down})
       .limit(PREMIUM_OFFERS_LIMIT)
       .exec();

@@ -18,6 +18,10 @@ type ParamsGetOffer = {
   offerId: string
 }
 
+type ParamsPremiumOffer = {
+  city: string
+}
+
 @injectable()
 export default class OfferController extends Controller {
   constructor(
@@ -32,6 +36,7 @@ export default class OfferController extends Controller {
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update});
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.delete});
+    this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.showPremium});
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
@@ -93,5 +98,12 @@ export default class OfferController extends Controller {
     }
 
     this.noContent(res, deletedOffer);
+  }
+
+  public async showPremium({params}: Request<core.ParamsDictionary | ParamsPremiumOffer>, res: Response) {
+    const {city} = params;
+
+    const offers = await this.offerService.findPremiumByCity(city);
+    this.ok(res, fillDTO(OfferShortResponse, offers));
   }
 }
