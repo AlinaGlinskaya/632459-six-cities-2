@@ -23,7 +23,7 @@ export abstract class Controller implements ControllerInterface {
     this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
   }
 
-  public send<T>(res: Response, statusCode: number, data: T): void {
+  private send<T>(res: Response, statusCode: number, data: T): void {
     res
       .type('application/json')
       .status(statusCode)
