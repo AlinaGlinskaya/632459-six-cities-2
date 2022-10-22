@@ -24,3 +24,28 @@ Content-Type: application/json
   "password": "qwerty",
   "userStatus": "Common"
 }
+
+###
+
+# Действия с пользователями
+## Авторизация пользователя
+
+POST http://localhost:9000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "mail@mail.local",
+  "password": "qwerty"
+}
+
+###
+
+# Действия с пользователями
+## Проверка статуса авторизации пользователя
+
+GET http://localhost:9000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "mail@mail.local"
+}
