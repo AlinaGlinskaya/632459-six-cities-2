@@ -78,6 +78,10 @@ export default class OfferService implements OfferServiceInterface {
     }
     return this.offerModel.findByIdAndUpdate(offerId, {'$set': {rating: updatedRating}});
   }
+
+  public async findFavoriteByIds(offerIds: string[]): Promise<types.DocumentType<OfferEntity>[]> {
+    return this.offerModel.find({_id: offerIds});
+  }
 }
 
 

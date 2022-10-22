@@ -4,6 +4,15 @@ import { Component } from '../../types/component.types.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { OfferServiceInterface } from '../offer/offer-service.interface.js';
 import { UserServiceInterface } from '../user/user-service.interface.js';
+import { HttpMethod } from '../../types/http-method.enum.js';
+import { Request, Response } from 'express';
+import * as core from 'express-serve-static-core';
+import { fillDTO } from '../../utils/common.js';
+import OfferResponse from '../offer/response/offer.response.js';
+
+type ParamsFavoriteOffer = {
+  userId: string
+}
 
 @injectable()
 export default class FavoriteController extends Controller {
@@ -14,5 +23,20 @@ export default class FavoriteController extends Controller {
     super(logger);
 
     this.logger.info('Register routes for FavoriteController...');
+    this.addRoute({path: '/:userId', method: HttpMethod.Get, handler: this.index});
+  }
+
+  public async index({params}: Request<core.ParamsDictionary | ParamsFavoriteOffer>, res: Response): Promise<void> {
+    const {userId} = params;
+
+    const user = await this.userService.findFavoritesIds(userId);
+    const favoriteIds = user?.favorites;
+
+    if (!favoriteIds) {
+      this.ok(res, favoriteIds);
+    } else {
+      const offers = await this.offerService.findFavoriteByIds(favoriteIds);
+      this.ok(res, fillDTO(OfferResponse, offers));
+    }
   }
 }
