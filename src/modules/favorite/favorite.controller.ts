@@ -51,9 +51,9 @@ export default class FavoriteController extends Controller {
 
   public async addFavorite({params}: Request<core.ParamsDictionary | ParamsChangeFavorite>, res: Response): Promise<void> {
     const {userId, offerId} = params;
-    const offer = await this.userService.addToFavorites(userId, offerId);
+    const userFavorite = await this.userService.addToFavorites(userId, offerId);
 
-    if (!offer) {
+    if (!userFavorite) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Offer with id ${offerId} not found`,
@@ -61,14 +61,14 @@ export default class FavoriteController extends Controller {
       );
     }
 
-    this.noContent(res, offer);
+    this.ok(res, userFavorite);
   }
 
   public async removeFavorite({params}: Request<core.ParamsDictionary | ParamsChangeFavorite>, res: Response): Promise<void> {
     const {userId, offerId} = params;
-    const offer = await this.userService.removeFromFavorites(userId, offerId);
+    const userFavorite = await this.userService.removeFromFavorites(userId, offerId);
 
-    if (!offer) {
+    if (!userFavorite) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Offer with id ${offerId} not found`,
@@ -76,6 +76,6 @@ export default class FavoriteController extends Controller {
       );
     }
 
-    this.noContent(res, offer);
+    this.ok(res, userFavorite);
   }
 }

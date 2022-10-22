@@ -54,6 +54,6 @@ export default class UserService implements UserServiceInterface {
   }
 
   public async removeFromFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
-    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}}, {new: true});
+    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}});
   }
 }
