@@ -8,9 +8,9 @@ import createOfferDto from './dto/create-offer.dto.js';
 import { OFFERS_LIMIT } from '../../const.js';
 import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
-import { SortType, PREMIUM_OFFERS_LIMIT, shortOfferFields } from '../../const.js';
-import { City } from '../../types/city.enum.js';
+import { SortType, PREMIUM_OFFERS_LIMIT } from '../../const.js';
 import { CommentEntity } from '../comment/comment.entity.js';
+import { ucFirst } from '../../utils/common.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -38,7 +38,6 @@ export default class OfferService implements OfferServiceInterface {
       .find()
       .sort({createdAt: SortType.Down})
       .limit(limit)
-      .select(shortOfferFields)
       .exec();
   }
 
@@ -55,12 +54,12 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async findPremiumByCity(city: City): Promise<types.DocumentType<OfferEntity>[]> {
+  public async findPremiumByCity(city: string): Promise<types.DocumentType<OfferEntity>[]> {
+    const cityTitle = ucFirst(city);
     return this.offerModel
-      .find({city: city, premium: true})
+      .find({city: cityTitle, premium: true})
       .sort({createdAt: SortType.Down})
       .limit(PREMIUM_OFFERS_LIMIT)
-      .select(shortOfferFields)
       .exec();
   }
 
@@ -78,6 +77,10 @@ export default class OfferService implements OfferServiceInterface {
       updatedRating = ((ratingInfo.rating * ratingInfo.commentCount) + Number(newCommentRating)) / (ratingInfo.commentCount + 1);
     }
     return this.offerModel.findByIdAndUpdate(offerId, {'$set': {rating: updatedRating}});
+  }
+
+  public async findFavoriteByIds(offerIds: string[]): Promise<types.DocumentType<OfferEntity>[]> {
+    return this.offerModel.find({_id: offerIds});
   }
 }
 

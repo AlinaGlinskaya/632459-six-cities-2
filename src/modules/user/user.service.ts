@@ -45,7 +45,7 @@ export default class UserService implements UserServiceInterface {
     return this.userModel.findByIdAndUpdate(userId, dto, {new: true});
   }
 
-  public async findFavorites(userId: string): Promise <string[] | null> {
+  public async findFavoritesIds(userId: string): Promise<types.DocumentType<UserEntity> | null> {
     return this.userModel.findById(userId, {favorites: 1, _id: 0});
   }
 
@@ -54,6 +54,6 @@ export default class UserService implements UserServiceInterface {
   }
 
   public async removeFromFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
-    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}}, {new: true});
+    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}});
   }
 }
