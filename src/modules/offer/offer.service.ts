@@ -1,5 +1,5 @@
 import { OfferServiceInterface } from './offer-service.interface.js';
-import {inject, injectable} from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Component } from '../../types/component.types.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { types } from '@typegoose/typegoose';

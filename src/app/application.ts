@@ -5,7 +5,7 @@ import { Component } from '../types/component.types.js';
 import 'reflect-metadata';
 import { DatabaseInterface } from '../common/database-client/database.interface.js';
 import { getURI } from '../utils/db.js';
-import express, {Express} from 'express';
+import express, { Express } from 'express';
 import { ControllerInterface } from '../common/controller/controller.interface.js';
 import { ExceptionFilterInterface } from '../common/errors/exception-filter.interface.js';
 

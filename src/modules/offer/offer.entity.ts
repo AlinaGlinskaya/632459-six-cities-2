@@ -1,5 +1,5 @@
-import typegoose, {getModelForClass, defaultClasses, Ref} from '@typegoose/typegoose';
-import {Rating, RoomCount, GuestCount, Price } from '../../const.js';
+import typegoose, { getModelForClass, defaultClasses, Ref } from '@typegoose/typegoose';
+import { Rating, RoomCount, GuestCount, Price } from '../../const.js';
 import { City } from '../../types/city.enum.js';
 import { HousingType } from '../../types/housing-type.enum.js';
 import { UserEntity } from '../user/user.entity.js';

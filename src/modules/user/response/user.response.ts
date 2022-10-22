@@ -1,4 +1,4 @@
-import {Expose} from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { UserStatus } from '../../../types/user-status.enum.js';
 
 export default class UserResponse {

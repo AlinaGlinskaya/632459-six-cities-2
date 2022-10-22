@@ -1,4 +1,4 @@
-import typegoose, {defaultClasses, getModelForClass, Ref} from '@typegoose/typegoose';
+import typegoose, { defaultClasses, getModelForClass, Ref } from '@typegoose/typegoose';
 import { CommentLength, CommentRating } from '../../const.js';
 import { OfferEntity } from '../offer/offer.entity.js';
 import { UserEntity } from '../user/user.entity.js';
