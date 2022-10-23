@@ -27,8 +27,8 @@ export default class CommentController extends Controller {
     super(logger);
 
     this.logger.info('Register routes for CommentController...');
-    this.addRoute({path: 'offers/:offerId/comments', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: 'offers/:offerId/comments', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({path: '/:offerId/comments', method: HttpMethod.Post, handler: this.create});
   }
 
   public async create(
@@ -48,5 +48,24 @@ export default class CommentController extends Controller {
 
     const comment = await this.commentService.create(body);
     this.created(res, fillDTO(CommentResponse, comment));
+  }
+
+  public async index(
+    {params}: Request<core.ParamsDictionary | ParamsGetComments>,
+    res: Response
+  ): Promise<void> {
+    const {offerId} = params;
+    const offer = await this.offerService.findById(offerId);
+
+    if (!offer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${params.offerId} not found`,
+        'Offer Controller'
+      );
+    }
+
+    const comments = await this.commentService.findByOfferId(offerId);
+    this.ok(res, fillDTO(CommentResponse, comments));
   }
 }
