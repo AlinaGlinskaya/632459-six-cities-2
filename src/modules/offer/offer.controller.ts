@@ -98,7 +98,7 @@ export default class OfferController extends Controller {
       );
     }
 
-    this.noContent(res, deletedOffer);
+    this.noContent(res);
   }
 
   public async showPremium({params}: Request<core.ParamsDictionary | ParamsPremiumOffer>, res: Response) {

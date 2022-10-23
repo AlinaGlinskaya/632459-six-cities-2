@@ -144,11 +144,3 @@ Content-Type: application/json
 
 GET http://localhost:9000/favorite/634ef0047bd6c921c282078b
 Content-Type: application/json
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import {inject, injectable} from 'inversify';
+import { inject, injectable } from 'inversify';
 import { ConfigInterface } from '../../common/config/config.interface.js';
 import { Controller } from '../../common/controller/controller.js';
 import HttpError from '../../common/errors/http-error.js';
