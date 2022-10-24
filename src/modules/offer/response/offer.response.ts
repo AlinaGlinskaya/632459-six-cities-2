@@ -49,7 +49,7 @@ export default class OfferResponse {
 
   @Expose({name: 'authorId'})
   @Type(() => UserResponse)
-  public user!: UserResponse;
+  public author!: UserResponse;
 
   @Expose()
   public commentCount!: number;
