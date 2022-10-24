@@ -12,6 +12,7 @@ import { StatusCodes } from 'http-status-codes';
 import { CommentServiceInterface } from './comment-service.interface.js';
 import { fillDTO } from '../../utils/common.js';
 import CommentResponse from './response/comment.response.js';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 
 type ParamsGetComments = {
   offerId: string
@@ -27,8 +28,18 @@ export default class CommentController extends Controller {
     super(logger);
 
     this.logger.info('Register routes for CommentController...');
-    this.addRoute({path: '/:offerId/comments', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/:offerId/comments', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/:offerId/comments',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
+    this.addRoute({
+      path: '/:offerId/comments',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
   }
 
   public async create(

@@ -11,6 +11,7 @@ import { fillDTO } from '../../utils/common.js';
 import OfferResponse from '../offer/response/offer.response.js';
 import HttpError from '../../common/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 
 type ParamsGetFavorite = {
   userId: string
@@ -31,9 +32,29 @@ export default class FavoriteController extends Controller {
     super(logger);
 
     this.logger.info('Register routes for FavoriteController...');
-    this.addRoute({path: '/:userId', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/:userId/:offerId', method: HttpMethod.Post, handler: this.addFavorite});
-    this.addRoute({path: '/:userId/:offerId', method: HttpMethod.Delete, handler: this.removeFavorite});
+    this.addRoute({
+      path: '/:userId',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [new ValidateObjectIdMiddleware('userId')]
+    });
+    this.addRoute({
+      path: '/:userId/:offerId',
+      method: HttpMethod.Post,
+      handler: this.addFavorite,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new ValidateObjectIdMiddleware('offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/:userId/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.removeFavorite,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new ValidateObjectIdMiddleware('offerId')
+      ]});
   }
 
   public async index({params}: Request<core.ParamsDictionary | ParamsGetFavorite>, res: Response): Promise<void> {
