@@ -159,6 +159,6 @@ Content-Type: application/json
 {
   "offerId": "634ef0057bd6c921c28207be",
   "text": "Lorem ipsum",
-  "rating": "3",
+  "rating": 2,
   "authorId": "634ef0047bd6c921c282078b"
 }
