@@ -21,7 +21,8 @@ export default class Application {
     @inject(Component.UserController) private userController: ControllerInterface,
     @inject(Component.FavoriteController) private favoriteController: ControllerInterface,
     @inject(Component.CommentController) private commentController: ControllerInterface,
-    @inject(Component.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface) {
+    @inject(Component.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface
+  ) {
     this.expressApp = express();
   }
 
