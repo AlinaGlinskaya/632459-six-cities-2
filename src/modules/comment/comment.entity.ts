@@ -20,9 +20,6 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({required: true, trim: true, minlength: CommentLength.MIN, maxlength: CommentLength.MAX})
   public text!: string;
 
-  @prop({required: true})
-  public date!: string;
-
   @prop({required: true, min: CommentRating.MIN, max: CommentRating.MAX})
   public rating!: number;
 

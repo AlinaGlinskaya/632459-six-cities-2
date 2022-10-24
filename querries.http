@@ -153,13 +153,12 @@ Content-Type: application/json
 
 ###
 ## Добавление комментария к предложению
-POST http://localhost:9000/offers/634ef0057bd6c921c28207be/comments HTTP/1.1
+POST http://localhost:9000/offers/634ef0047bd6c921c28207ac/comments HTTP/1.1
 Content-Type: application/json
 
 {
   "offerId": "634ef0057bd6c921c28207be",
   "text": "Lorem ipsum",
-  "date": "2022-10-22T11:56:37.573Z",
-  "rating": "5",
+  "rating": "3",
   "authorId": "634ef0047bd6c921c282078b"
 }
