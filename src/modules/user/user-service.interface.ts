@@ -12,4 +12,5 @@ export interface UserServiceInterface {
   findFavoritesIds(userId: string): Promise<DocumentType<UserEntity> | null>;
   addToFavorites(userId: string, offerId: string): Promise<DocumentType<UserEntity> | null>;
   removeFromFavorites(userId: string, offerId: string): Promise<DocumentType<UserEntity> | null>;
+  exists(documentId: string): Promise<boolean>;
 }

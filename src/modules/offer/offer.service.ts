@@ -78,4 +78,8 @@ export default class OfferService implements OfferServiceInterface {
   public async findFavoriteByIds(offerIds: string[]): Promise<types.DocumentType<OfferEntity>[]> {
     return this.offerModel.find({_id: offerIds});
   }
+
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.offerModel.exists({_id: documentId})) !== null;
+  }
 }
