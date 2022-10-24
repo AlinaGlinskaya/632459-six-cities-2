@@ -1,4 +1,4 @@
-import {Expose, Type} from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { City } from '../../../types/city.enum.js';
 import { HousingType } from '../../../types/housing-type.enum.js';
 import UserResponse from '../../user/response/user.response.js';
@@ -49,7 +49,7 @@ export default class OfferResponse {
 
   @Expose({name: 'authorId'})
   @Type(() => UserResponse)
-  public user!: UserResponse;
+  public author!: UserResponse;
 
   @Expose()
   public commentCount!: number;

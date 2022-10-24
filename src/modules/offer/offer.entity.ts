@@ -1,5 +1,5 @@
-import typegoose, {getModelForClass, defaultClasses, Ref} from '@typegoose/typegoose';
-import {Rating, RoomCount, GuestCount, Price } from '../../const.js';
+import typegoose, { getModelForClass, defaultClasses, Ref } from '@typegoose/typegoose';
+import { Rating, RoomCount, GuestCount, Price } from '../../const.js';
 import { City } from '../../types/city.enum.js';
 import { HousingType } from '../../types/housing-type.enum.js';
 import { UserEntity } from '../user/user.entity.js';
@@ -47,7 +47,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public favorite!: boolean;
 
-  @prop({required: true, min: Rating.MIN, max: Rating.MAX})
+  @prop({required: true, min: Rating.MIN, max: Rating.MAX, default: 1})
   public rating!: number;
 
   @prop({required: true, enum: HousingType})

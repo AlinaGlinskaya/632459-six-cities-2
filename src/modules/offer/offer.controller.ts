@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import {inject, injectable} from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Controller } from '../../common/controller/controller.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
@@ -13,6 +13,8 @@ import { StatusCodes } from 'http-status-codes';
 import OfferResponse from './response/offer.response.js';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
+import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string
@@ -26,16 +28,40 @@ type ParamsPremiumOffer = {
 export default class OfferController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
-    @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface) {
+    @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface
+  ) {
     super(logger);
 
     this.logger.info('Register routes for OfferController...');
 
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.show});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.delete});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.show,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Put,
+      handler: this.update,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(CreateOfferDto)
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.showPremium});
   }
 
@@ -97,7 +123,7 @@ export default class OfferController extends Controller {
       );
     }
 
-    this.noContent(res, deletedOffer);
+    this.noContent(res);
   }
 
   public async showPremium({params}: Request<core.ParamsDictionary | ParamsPremiumOffer>, res: Response) {

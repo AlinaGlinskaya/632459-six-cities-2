@@ -1,4 +1,4 @@
-import {Expose} from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { City } from '../../../types/city.enum.js';
 import { HousingType } from '../../../types/housing-type.enum.js';
 

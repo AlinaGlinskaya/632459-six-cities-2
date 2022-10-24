@@ -1,5 +1,5 @@
 import { Controller } from '../../common/controller/controller.js';
-import {inject, injectable} from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Component } from '../../types/component.types.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { OfferServiceInterface } from '../offer/offer-service.interface.js';
@@ -11,6 +11,7 @@ import { fillDTO } from '../../utils/common.js';
 import OfferResponse from '../offer/response/offer.response.js';
 import HttpError from '../../common/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 
 type ParamsGetFavorite = {
   userId: string
@@ -26,13 +27,34 @@ export default class FavoriteController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
     @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
-    @inject(Component.UserServiceInterface) private readonly userService: UserServiceInterface) {
+    @inject(Component.UserServiceInterface) private readonly userService: UserServiceInterface
+  ) {
     super(logger);
 
     this.logger.info('Register routes for FavoriteController...');
-    this.addRoute({path: '/:userId', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/:userId/:offerId', method: HttpMethod.Post, handler: this.addFavorite});
-    this.addRoute({path: '/:userId/:offerId', method: HttpMethod.Delete, handler: this.removeFavorite});
+    this.addRoute({
+      path: '/:userId',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [new ValidateObjectIdMiddleware('userId')]
+    });
+    this.addRoute({
+      path: '/:userId/:offerId',
+      method: HttpMethod.Post,
+      handler: this.addFavorite,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new ValidateObjectIdMiddleware('offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/:userId/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.removeFavorite,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new ValidateObjectIdMiddleware('offerId')
+      ]});
   }
 
   public async index({params}: Request<core.ParamsDictionary | ParamsGetFavorite>, res: Response): Promise<void> {
@@ -41,8 +63,8 @@ export default class FavoriteController extends Controller {
     const user = await this.userService.findFavoritesIds(userId);
     const favoriteIds = user?.favorites;
 
-    if (!favoriteIds) {
-      this.ok(res, favoriteIds);
+    if (!favoriteIds || favoriteIds.length === 0) {
+      this.ok(res, []);
     } else {
       const offers = await this.offerService.findFavoriteByIds(favoriteIds);
       this.ok(res, fillDTO(OfferResponse, offers));

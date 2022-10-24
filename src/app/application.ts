@@ -5,7 +5,7 @@ import { Component } from '../types/component.types.js';
 import 'reflect-metadata';
 import { DatabaseInterface } from '../common/database-client/database.interface.js';
 import { getURI } from '../utils/db.js';
-import express, {Express} from 'express';
+import express, { Express } from 'express';
 import { ControllerInterface } from '../common/controller/controller.interface.js';
 import { ExceptionFilterInterface } from '../common/errors/exception-filter.interface.js';
 
@@ -20,12 +20,15 @@ export default class Application {
     @inject(Component.OfferController) private offerController: ControllerInterface,
     @inject(Component.UserController) private userController: ControllerInterface,
     @inject(Component.FavoriteController) private favoriteController: ControllerInterface,
-    @inject(Component.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface) {
+    @inject(Component.CommentController) private commentController: ControllerInterface,
+    @inject(Component.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface
+  ) {
     this.expressApp = express();
   }
 
   public initRoutes() {
     this.expressApp.use('/offers', this.offerController.router);
+    this.expressApp.use('/offers', this.commentController.router);
     this.expressApp.use('/users', this.userController.router);
     this.expressApp.use('/favorite', this.favoriteController.router);
   }
@@ -56,7 +59,8 @@ export default class Application {
     this.initMiddleware();
     this.initRoutes();
     this.initExceptionFilters();
-    this.expressApp.listen(this.config.get('PORT'));
-    this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
+    this.expressApp.listen(this.config.get('PORT'), () => {
+      this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
+    });
   }
 }

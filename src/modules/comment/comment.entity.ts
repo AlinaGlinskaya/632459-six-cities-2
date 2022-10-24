@@ -1,5 +1,5 @@
-import typegoose, {defaultClasses, getModelForClass, Ref} from '@typegoose/typegoose';
-import { CommentLength, CommentRating } from '../../const.js';
+import typegoose, { defaultClasses, getModelForClass, Ref } from '@typegoose/typegoose';
+import { CommentRating } from '../../const.js';
 import { OfferEntity } from '../offer/offer.entity.js';
 import { UserEntity } from '../user/user.entity.js';
 
@@ -15,13 +15,10 @@ export interface CommentEntity extends defaultClasses.Base {}
 
 export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({required: true, ref: OfferEntity})
-  public offerId!: string;
+  public offerId!: Ref<OfferEntity>;
 
-  @prop({required: true, trim: true, minlength: CommentLength.MIN, maxlength: CommentLength.MAX})
+  @prop({required: true, trim: true})
   public text!: string;
-
-  @prop({required: true})
-  public date!: string;
 
   @prop({required: true, min: CommentRating.MIN, max: CommentRating.MAX})
   public rating!: number;
