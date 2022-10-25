@@ -8,12 +8,11 @@ import { OfferServiceInterface } from './offer-service.interface.js';
 import OfferShortResponse from './response/offer-short.response.js';
 import { fillDTO } from '../../utils/common.js';
 import * as core from 'express-serve-static-core';
-import HttpError from '../../common/errors/http-error.js';
-import { StatusCodes } from 'http-status-codes';
 import OfferResponse from './response/offer.response.js';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
+import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 
 type ParamsGetOffer = {
@@ -39,7 +38,10 @@ export default class OfferController extends Controller {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.show,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
+      ]
     });
     this.addRoute({
       path: '/',
@@ -53,14 +55,18 @@ export default class OfferController extends Controller {
       handler: this.update,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDtoMiddleware(CreateOfferDto)
+        new ValidateDtoMiddleware(CreateOfferDto),
+        new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
       ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
+      ]
     });
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.showPremium});
   }
@@ -74,15 +80,6 @@ export default class OfferController extends Controller {
     const {offerId} = params;
 
     const offer = await this.offerService.findById(offerId);
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found`,
-        'Offer Controller'
-      );
-    }
-
     this.ok(res, fillDTO(OfferResponse, offer));
   }
 
@@ -98,31 +95,13 @@ export default class OfferController extends Controller {
     {body, params}: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateOfferDto>,
     res: Response): Promise<void> {
     const updatedOffer = await this.offerService.updateById(params.offerId, body);
-
-    if (!updatedOffer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${params.offerId} not found.`,
-        'Offer Controller'
-      );
-    }
-
     this.ok(res, fillDTO(OfferResponse, updatedOffer));
   }
 
   public async delete({params}: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response) {
     const {offerId} = params;
 
-    const deletedOffer = await this.offerService.deleteById(offerId);
-
-    if (!deletedOffer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'Offer Controller'
-      );
-    }
-
+    await this.offerService.deleteById(offerId);
     this.noContent(res);
   }
 

@@ -7,13 +7,12 @@ import { HttpMethod } from '../../types/http-method.enum.js';
 import { Request, Response } from 'express';
 import CreateCommentDto from './dto/create-comment.dto.js';
 import * as core from 'express-serve-static-core';
-import HttpError from '../../common/errors/http-error.js';
-import { StatusCodes } from 'http-status-codes';
 import { CommentServiceInterface } from './comment-service.interface.js';
 import { fillDTO } from '../../utils/common.js';
 import CommentResponse from './response/comment.response.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
+import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 
 type ParamsGetComments = {
   offerId: string
@@ -33,7 +32,10 @@ export default class CommentController extends Controller {
       path: '/:offerId/comments',
       method: HttpMethod.Get,
       handler: this.index,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
+      ]
     });
     this.addRoute({
       path: '/:offerId/comments',
@@ -41,7 +43,8 @@ export default class CommentController extends Controller {
       handler: this.create,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDtoMiddleware(CreateCommentDto)
+        new ValidateDtoMiddleware(CreateCommentDto),
+        new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
       ]
     });
   }
@@ -51,16 +54,7 @@ export default class CommentController extends Controller {
     res: Response
   ): Promise<void> {
 
-    const offer = await this.offerService.findById(params.offerId);
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${params.offerId} not found`,
-        'Offer Controller'
-      );
-    }
-
+    await this.offerService.findById(params.offerId);
     const comment = await this.commentService.create(body);
     await this.offerService.incCommentCount(params.offerId);
     await this.offerService.calculateRating(params.offerId, Number(body.rating));
@@ -72,16 +66,7 @@ export default class CommentController extends Controller {
     res: Response
   ): Promise<void> {
     const {offerId} = params;
-    const offer = await this.offerService.findById(offerId);
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${params.offerId} not found`,
-        'Offer Controller'
-      );
-    }
-
+    await this.offerService.findById(offerId);
     const comments = await this.commentService.findByOfferId(offerId);
     this.ok(res, fillDTO(CommentResponse, comments));
   }

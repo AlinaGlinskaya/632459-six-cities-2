@@ -9,9 +9,8 @@ import { Request, Response } from 'express';
 import * as core from 'express-serve-static-core';
 import { fillDTO } from '../../utils/common.js';
 import OfferResponse from '../offer/response/offer.response.js';
-import HttpError from '../../common/errors/http-error.js';
-import { StatusCodes } from 'http-status-codes';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
+import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 
 type ParamsGetFavorite = {
   userId: string
@@ -36,7 +35,10 @@ export default class FavoriteController extends Controller {
       path: '/:userId',
       method: HttpMethod.Get,
       handler: this.index,
-      middlewares: [new ValidateObjectIdMiddleware('userId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new DocumentExistsMiddleware(this.userService, 'user', 'userId')
+      ]
     });
     this.addRoute({
       path: '/:userId/:offerId',
@@ -44,7 +46,9 @@ export default class FavoriteController extends Controller {
       handler: this.addFavorite,
       middlewares: [
         new ValidateObjectIdMiddleware('userId'),
-        new ValidateObjectIdMiddleware('offerId')
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.userService, 'user', 'userId'),
+        new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
       ]
     });
     this.addRoute({
@@ -53,7 +57,9 @@ export default class FavoriteController extends Controller {
       handler: this.removeFavorite,
       middlewares: [
         new ValidateObjectIdMiddleware('userId'),
-        new ValidateObjectIdMiddleware('offerId')
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.userService, 'user', 'userId'),
+        new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
       ]});
   }
 
@@ -74,30 +80,12 @@ export default class FavoriteController extends Controller {
   public async addFavorite({params}: Request<core.ParamsDictionary | ParamsChangeFavorite>, res: Response): Promise<void> {
     const {userId, offerId} = params;
     const userFavorite = await this.userService.addToFavorites(userId, offerId);
-
-    if (!userFavorite) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found`,
-        'Favorite Controller'
-      );
-    }
-
     this.ok(res, userFavorite);
   }
 
   public async removeFavorite({params}: Request<core.ParamsDictionary | ParamsChangeFavorite>, res: Response): Promise<void> {
     const {userId, offerId} = params;
     const userFavorite = await this.userService.removeFromFavorites(userId, offerId);
-
-    if (!userFavorite) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found`,
-        'Favorite Controller'
-      );
-    }
-
     this.ok(res, userFavorite);
   }
 }
