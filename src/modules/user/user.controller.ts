@@ -13,6 +13,8 @@ import { UserServiceInterface } from './user-service.interface.js';
 import UserResponse from './response/user.response.js';
 import LoginUserDto from './dto/login-user.dto.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
+import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
+import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -38,6 +40,15 @@ export default class UserController extends Controller {
     });
     this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.checkAuth});
     this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new DocumentExistsMiddleware(this.userService, 'user', 'userId'),
+        new UploadFileMiddleware('avatar', this.configService.get('UPLOAD_DIRECTORY'))
+      ]
+    });
   }
 
   public async create(
@@ -110,5 +121,11 @@ export default class UserController extends Controller {
     }
 
     this.noContent(res);
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path
+    });
   }
 }

@@ -73,7 +73,7 @@ export const createErrorObject = (message: string) => ({
   error: message,
 });
 
-export const ucFirst = (str: string) => {
+export const setUcFirst = (str: string) => {
   if (!str) {
     return str;
   }

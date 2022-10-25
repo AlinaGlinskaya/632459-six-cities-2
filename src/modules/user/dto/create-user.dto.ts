@@ -1,5 +1,5 @@
 import { UserStatus } from '../../../types/user-status.enum.js';
-import { IsString, IsEmail, IsEnum } from 'class-validator';
+import { IsString, IsEmail, IsEnum, IsOptional } from 'class-validator';
 
 export default class CreateUserDto {
   @IsString({message: 'userName is required'})
@@ -8,6 +8,7 @@ export default class CreateUserDto {
   @IsEmail({}, {message: 'email must be a valid address'})
   public email!: string;
 
+  @IsOptional()
   public avatarPath!: string;
 
   @IsString({message: 'password is required and must be a string'})
