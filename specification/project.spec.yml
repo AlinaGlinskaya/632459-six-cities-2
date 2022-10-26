@@ -530,7 +530,7 @@ components:
           type: string
         price:
           type: integer
-        :
+        commentCount:
           type: integer
       example:
         id:  63444077b02202c8cf068388
