@@ -17,6 +17,9 @@ export default class UserService implements UserServiceInterface {
 
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const user = new UserEntity(dto);
+    if (user.avatarPath === null || user.avatarPath === undefined) {
+      user.avatarPath = './uploads/avatar.svg';
+    }
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
@@ -55,5 +58,9 @@ export default class UserService implements UserServiceInterface {
 
   public async removeFromFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
     return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}});
+  }
+
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.userModel.exists({_id: documentId})) !== null;
   }
 }
