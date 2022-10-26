@@ -167,7 +167,7 @@ Content-Type: application/json
 
 ## Отправка аватарки пользователю
 
-POST http://localhost:9000/users/634ef0057bd6c921c28207c2/avatar HTTP/1.1
+POST http://localhost:9000/users/634ef0047bd6c921c282078b/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -176,3 +176,4 @@ Content-Type: image/png
 
 < Projects/1.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
