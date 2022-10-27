@@ -50,14 +50,16 @@ export default class CommentController extends Controller {
   }
 
   public async create(
-    {body, params}: Request<core.ParamsDictionary | ParamsGetComments, Record<string, unknown>,  CreateCommentDto>,
+    req: Request<core.ParamsDictionary | ParamsGetComments, Record<string, unknown>,  CreateCommentDto>,
     res: Response
   ): Promise<void> {
 
-    await this.offerService.findById(params.offerId);
-    const comment = await this.commentService.create(body);
-    await this.offerService.incCommentCount(params.offerId);
-    await this.offerService.calculateRating(params.offerId, Number(body.rating));
+    const {body} = req;
+
+    await this.offerService.findById(req.params.offerId);
+    const comment = await this.commentService.create({...body, authorId: req.user.id});
+    await this.offerService.incCommentCount(req.params.offerId);
+    await this.offerService.calculateRating(req.params.offerId, Number(body.rating));
     this.created(res, fillDTO(CommentResponse, comment));
   }
 
