@@ -47,3 +47,5 @@ export const HOUSE_PHOTO_COUNT = 6;
 export const OFFERS_LIMIT = 60;
 export const COMMENTS_LIMIT = 50;
 export const PREMIUM_OFFERS_LIMIT = 3;
+
+export const JWT_ALGORITHM = 'HS256';

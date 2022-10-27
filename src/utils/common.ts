@@ -5,6 +5,7 @@ import { UserStatus } from '../types/user-status.enum.js';
 import crypto from 'crypto';
 import { plainToInstance } from 'class-transformer';
 import { ClassConstructor } from 'class-transformer/types/interfaces/class-constructor.type.js';
+import * as jose from 'jose';
 
 const parseLocation = (location: string[]) => {
   const [latitude, longitude] = location;
@@ -78,4 +79,14 @@ export const setUcFirst = (str: string) => {
     return str;
   }
   return str[0].toUpperCase() + str.slice(1);
+};
+
+export const createJWT = async (algorithm: string, jwtSecret: string, payload: object): Promise<string> => {
+  const token = new jose.SignJWT({...payload})
+    .setProtectedHeader({alg: algorithm})
+    .setIssuedAt()
+    .setExpirationTime('2d')
+    .sign(crypto.createSecretKey(jwtSecret, 'utf-8'));
+
+  return token;
 };
