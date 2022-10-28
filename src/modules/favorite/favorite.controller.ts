@@ -63,10 +63,9 @@ export default class FavoriteController extends Controller {
       ]});
   }
 
-  public async index({params}: Request<core.ParamsDictionary | ParamsGetFavorite>, res: Response): Promise<void> {
-    const {userId} = params;
+  public async index(req: Request<core.ParamsDictionary | ParamsGetFavorite>, res: Response): Promise<void> {
 
-    const user = await this.userService.findFavoritesIds(userId);
+    const user = await this.userService.findFavoritesIds(req.user.id);
     const favoriteIds = user?.favorites;
 
     if (!favoriteIds || favoriteIds.length === 0) {
@@ -77,15 +76,15 @@ export default class FavoriteController extends Controller {
     }
   }
 
-  public async addFavorite({params}: Request<core.ParamsDictionary | ParamsChangeFavorite>, res: Response): Promise<void> {
-    const {userId, offerId} = params;
-    const userFavorite = await this.userService.addToFavorites(userId, offerId);
+  public async addFavorite(req: Request<core.ParamsDictionary | ParamsChangeFavorite>, res: Response): Promise<void> {
+    const {offerId} = req.params;
+    const userFavorite = await this.userService.addToFavorites(req.user.id, offerId);
     this.ok(res, userFavorite);
   }
 
-  public async removeFavorite({params}: Request<core.ParamsDictionary | ParamsChangeFavorite>, res: Response): Promise<void> {
-    const {userId, offerId} = params;
-    const userFavorite = await this.userService.removeFromFavorites(userId, offerId);
+  public async removeFavorite(req: Request<core.ParamsDictionary | ParamsChangeFavorite>, res: Response): Promise<void> {
+    const {offerId} = req.params;
+    const userFavorite = await this.userService.removeFromFavorites(req.user.id, offerId);
     this.ok(res, userFavorite);
   }
 }
