@@ -107,7 +107,7 @@ export default class UserController extends Controller {
       );
     }
 
-    this.ok(res, fillDTO(UserResponse, existUser));
+    this.ok(res, fillDTO(LoggedUserResponse, existUser));
   }
 
   public async logout(

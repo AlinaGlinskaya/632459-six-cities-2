@@ -11,6 +11,7 @@ import { fillDTO } from '../../utils/common.js';
 import OfferResponse from '../offer/response/offer.response.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
+import { PrivateRouteMiddleWare } from '../../common/middlewares/private-route.middleware.js';
 
 type ParamsGetFavorite = {
   userId: string
@@ -36,6 +37,7 @@ export default class FavoriteController extends Controller {
       method: HttpMethod.Get,
       handler: this.index,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleware('userId'),
         new DocumentExistsMiddleware(this.userService, 'user', 'userId')
       ]
@@ -45,6 +47,7 @@ export default class FavoriteController extends Controller {
       method: HttpMethod.Post,
       handler: this.addFavorite,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleware('userId'),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.userService, 'user', 'userId'),
@@ -56,6 +59,7 @@ export default class FavoriteController extends Controller {
       method: HttpMethod.Delete,
       handler: this.removeFavorite,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleware('userId'),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.userService, 'user', 'userId'),
