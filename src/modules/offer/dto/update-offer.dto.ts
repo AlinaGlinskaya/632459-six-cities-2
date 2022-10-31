@@ -3,9 +3,9 @@ import { Coordinate } from '../../../types/coordinate.type.js';
 import { HousingType } from '../../../types/housing-type.enum.js';
 import { MinLength, MaxLength, IsDateString, IsEnum,
   IsLatitude, IsLongitude, ValidateNested, IsString,
-  IsArray, IsNotEmpty, IsBoolean, Min, Max, IsMongoId } from 'class-validator';
+  IsArray, IsNotEmpty, IsBoolean, Min, Max, IsMongoId, ArrayMinSize } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Rating, OfferNameLength, OfferDescriptionLength, RoomCount, GuestCount, Price } from '../../../const.js';
+import { Rating, OfferNameLength, OfferDescriptionLength, RoomCount, GuestCount, Price, HOUSE_PHOTO_COUNT } from '../../../const.js';
 
 class CoordinatesSchema {
   @IsLatitude({message: 'Property must be correct latitude'})
@@ -36,6 +36,7 @@ export default class CreateOfferDto {
   @IsArray({message: 'Photos must be an array'})
   @IsString({each: true, message: 'Photo url must be a string'})
   @IsNotEmpty({message: 'Photos is required'})
+  @ArrayMinSize(HOUSE_PHOTO_COUNT, {message: `Minimum photo count is ${HOUSE_PHOTO_COUNT}`})
   public photos!: string[];
 
   @IsBoolean({message: 'Premuim must be boolean value'})
