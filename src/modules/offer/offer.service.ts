@@ -5,7 +5,6 @@ import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { types } from '@typegoose/typegoose';
 import { OfferEntity } from './offer.entity.js';
 import createOfferDto from './dto/create-offer.dto.js';
-import { OFFERS_LIMIT } from '../../const.js';
 import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
 import { SortType, PREMIUM_OFFERS_LIMIT } from '../../const.js';
@@ -31,12 +30,11 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async find(count?: number): Promise<types.DocumentType<OfferEntity>[]> {
-    const limit = count ?? OFFERS_LIMIT;
+  public async find(count: number): Promise<types.DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find()
       .sort({createdAt: SortType.Down})
-      .limit(limit)
+      .limit(count)
       .exec();
   }
 
