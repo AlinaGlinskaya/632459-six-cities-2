@@ -24,7 +24,6 @@ export const createOffer = (row: string) => {
     preview,
     photos,
     premium,
-    favorite,
     rating,
     housingType,
     roomCount,
@@ -47,7 +46,6 @@ export const createOffer = (row: string) => {
     photos: photos.split(';')
       .map((photo) => photo),
     premium: JSON.parse(premium),
-    favorite: JSON.parse(favorite),
     rating: Number.parseFloat(rating),
     housingType: housingType as HousingType,
     roomCount: Number.parseInt(roomCount, 10),

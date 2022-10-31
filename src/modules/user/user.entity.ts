@@ -1,6 +1,6 @@
 import { User } from '../../types/user.type.js';
 import { UserStatus } from '../../types/user-status.enum.js';
-import { UsernameLength, PasswordLength } from '../../const.js';
+import { UsernameLength } from '../../const.js';
 import typegoose, { getModelForClass, defaultClasses } from '@typegoose/typegoose';
 import { createSHA256 } from '../../utils/common.js';
 
@@ -34,7 +34,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop()
   public avatarPath!: string;
 
-  @prop({required: true, minlength: PasswordLength.MIN, maxlength: PasswordLength.MAX})
+  @prop({required: true})
   public password!: string;
 
   @prop({required: true, enum: UserStatus})
