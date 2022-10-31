@@ -76,7 +76,8 @@ export default class FavoriteController extends Controller {
       this.ok(res, []);
     } else {
       const offers = await this.offerService.findFavoriteByIds(favoriteIds);
-      this.ok(res, fillDTO(OfferResponse, offers));
+      const extendedOffers = offers.map((offer) => ({...offer.toObject(), favorite: true}));
+      this.ok(res, fillDTO(OfferResponse, extendedOffers));
     }
   }
 
