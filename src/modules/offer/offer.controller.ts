@@ -90,11 +90,14 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(OfferShortResponse, extendedOffers));
   }
 
-  public async show({params}: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response): Promise<void> {
-    const {offerId} = params;
-
+  public async show(_req: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response): Promise<void> {
+    const {offerId} = _req.params;
     const offer = await this.offerService.findById(offerId);
-    this.ok(res, fillDTO(OfferResponse, offer));
+    const favoritesIds = _req.user?.id ? await this.userService.findFavoritesIds(_req.user.id) : null;
+    const extendedOffer = favoritesIds && offer
+      ? {...offer.toObject(), favorite: favoritesIds.favorites.some((id) => id === offer.id)}
+      : {...offer?.toObject(), favorite: false};
+    this.ok(res, fillDTO(OfferResponse, extendedOffer));
   }
 
   public async create(
