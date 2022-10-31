@@ -41,7 +41,6 @@ export default class UserController extends Controller {
       middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
     });
     this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.checkAuth});
-    this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
@@ -108,23 +107,6 @@ export default class UserController extends Controller {
     }
 
     this.ok(res, fillDTO(LoggedUserResponse, existUser));
-  }
-
-  public async logout(
-    {body}:Request<Record<string, unknown>, Record<string,unknown>>,
-    res: Response): Promise<void> {
-
-    const existUser = await this.userService.findByEmail(body.email);
-
-    if (!existUser) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} unauthorised`,
-        'UserController'
-      );
-    }
-
-    this.noContent(res);
   }
 
   public async uploadAvatar(req: Request, res: Response) {

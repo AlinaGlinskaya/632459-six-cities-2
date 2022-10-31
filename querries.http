@@ -116,17 +116,6 @@ Content-Type: application/json
 }
 
 ###
-
-## Выход из закрытой части приложения
-
-POST http://localhost:9000/users/logout HTTP/1.1
-Content-Type: application/json
-
-{
-  "email": "mail@mail.local"
-}
-
-###
 # Избранное
 ## Добавление предложения в избранное пользователя
 
