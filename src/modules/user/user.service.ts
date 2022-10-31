@@ -53,11 +53,15 @@ export default class UserService implements UserServiceInterface {
   }
 
   public async addToFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
-    return this.userModel.findByIdAndUpdate(userId, {'$push': {favorites: offerId}}, {new: true});
+    const user = await this.userModel.findById(userId);
+    if (!user?.favorites.find((id) => id === offerId)) {
+      return this.userModel.findByIdAndUpdate(userId, {'$push': {favorites: offerId}}, {new: true});
+    }
+    return user;
   }
 
   public async removeFromFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
-    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}});
+    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}}, {new: true});
   }
 
   public async exists(documentId: string): Promise<boolean> {
