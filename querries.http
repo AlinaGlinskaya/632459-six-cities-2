@@ -161,15 +161,15 @@ Authorization: Bearer sometoken
 
 ###
 
-## Отправка аватарки пользователю
+## Отправка аватарки пользователя
 
-POST http://localhost:9000/users/634ef0047bd6c921c282078b/avatar HTTP/1.1
+POST http://localhost:9000/users/635fd68f1f2c147afd3f691b/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="avatar"; filename="1.png"
 Content-Type: image/png
 
-< Projects/1.png
+< C:/Projects/1.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
