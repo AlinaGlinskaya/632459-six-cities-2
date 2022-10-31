@@ -28,6 +28,11 @@ export enum UsernameLength {
   MAX = 15
 }
 
+export enum PasswordLength {
+  MIN = 6,
+  MAX = 12
+}
+
 export enum CommentLength {
   MIN = 5,
   MAX = 1024
@@ -41,6 +46,16 @@ export enum CommentRating {
 export enum SortType {
   Down = -1,
   Up = 1
+}
+
+export enum OfferNameLength {
+  MIN = 10,
+  MAX = 100
+}
+
+export enum OfferDescriptionLength {
+  MIN = 20,
+  MAX = 1024
 }
 
 export const HOUSE_PHOTO_COUNT = 6;
