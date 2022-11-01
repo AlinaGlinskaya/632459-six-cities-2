@@ -28,6 +28,11 @@ export enum UsernameLength {
   MAX = 15
 }
 
+export enum PasswordLength {
+  MIN = 6,
+  MAX = 12
+}
+
 export enum CommentLength {
   MIN = 5,
   MAX = 1024
@@ -43,7 +48,20 @@ export enum SortType {
   Up = 1
 }
 
+export enum OfferNameLength {
+  MIN = 10,
+  MAX = 100
+}
+
+export enum OfferDescriptionLength {
+  MIN = 20,
+  MAX = 1024
+}
+
 export const HOUSE_PHOTO_COUNT = 6;
 export const OFFERS_LIMIT = 60;
 export const COMMENTS_LIMIT = 50;
 export const PREMIUM_OFFERS_LIMIT = 3;
+
+export const JWT_ALGORITHM = 'HS256';
+export const DEFAULT_AVATAR_PATH = 'avatar.svg';

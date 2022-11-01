@@ -20,7 +20,13 @@ export class UploadFileMiddleware implements MiddlewareInterface {
       }
     });
 
-    const uploadSingleFileMiddleware = multer({storage}).single(this.fieldName);
+    const uploadSingleFileMiddleware = multer({
+      storage: storage,
+      fileFilter: (_req, file, cb) => {
+        const extension = mime.extension(file.mimetype);
+        cb(null, extension === 'png' || extension === 'jpg' || extension === 'jpeg');
+      }
+    }).single(this.fieldName);
     uploadSingleFileMiddleware(req, res, next);
   }
 }

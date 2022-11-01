@@ -1,18 +1,18 @@
 import { MinLength, MaxLength, Min, Max, IsMongoId, IsInt } from 'class-validator';
+import { CommentLength, CommentRating } from '../../../const.js';
 
 export default class CreateCommentDto {
   @IsMongoId({message: 'offerId field must be valid id'})
   public offerId!: string;
 
-  @MinLength(5, {message: 'Minimum comment length must be 5'})
-  @MaxLength(1024, {message: 'Maximum comment length must be 1024'})
+  @MinLength(CommentLength.MIN, {message: `Minimum comment length must be ${CommentLength.MIN}`})
+  @MaxLength(CommentLength.MAX, {message: `Maximum comment length must be ${CommentLength.MAX}`})
   public text!: string;
 
   @IsInt({message: 'Rating must be an integer'})
-  @Min(1, {message: 'Minimum rating is 1'})
-  @Max(5, {message: 'Maximum rating is 5'})
+  @Min(CommentRating.MIN, {message: `Minimum rating is ${CommentRating.MIN}`})
+  @Max(CommentRating.MAX, {message: `Maximum rating is ${CommentRating.MAX}`})
   public rating!: number;
 
-  @IsMongoId({message: 'offerId field must be valid id'})
   public authorId!: string;
 }

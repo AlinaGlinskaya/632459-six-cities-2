@@ -25,12 +25,14 @@ Content-Type: application/json
 ## Удаление предложения по id
 DELETE http://localhost:9000/offers/6353da8a4594adbfdae292c2 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer sometoken
 
 ###
 
 ## Редактирование предложения по id
 PUT http://localhost:9000/offers/6353db49cd40c487f2da025c HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer sometoken
 
 {
   "offerName": "Apartments",
@@ -38,7 +40,8 @@ Content-Type: application/json
   "date": "2022-05-12T11:56:37.573Z",
   "city": "Paris",
   "preview": "https://i.com/1",
-  "photos": ["https://i.com/4", "https://i.com/5"],
+  "photos": ["https://i.com/4", "https://i.com/5",
+  "https://i.com/1", "https://i.com/2", "https://i.com/6", "https://i.com/7"],
   "premium": true,
   "favorite": false,
   "rating": 5,
@@ -56,14 +59,16 @@ Content-Type: application/json
 ## Создание предложения
 POST http://localhost:9000/offers HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer sometoken
 
 {
   "offerName": "Apartments",
-  "description": "Canal View Prinsengracht",
+  "description": "Lorem ipsum dolor lorem ipsum",
   "date": "2022-05-12T11:56:37.573Z",
   "city": "Paris",
   "preview": "https://i.com/1",
-  "photos": ["https://i.com/4", "https://i.com/5"],
+  "photos": ["https://i.com/4", "https://i.com/5",
+  "https://i.com/1", "https://i.com/2", "https://i.com/6", "https://i.com/7"],
   "premium": true,
   "favorite": false,
   "rating": 3,
@@ -116,34 +121,25 @@ Content-Type: application/json
 }
 
 ###
-
-## Выход из закрытой части приложения
-
-POST http://localhost:9000/users/logout HTTP/1.1
-Content-Type: application/json
-
-{
-  "email": "mail@mail.local"
-}
-
-###
 # Избранное
 ## Добавление предложения в избранное пользователя
 
-POST http://localhost:9000/favorite/6353af951d882a3a15cb4313/634ef0057bd6c921c28207b4 HTTP/1.1
+POST http://localhost:9000/favorite/6353af951d882a3a15cb4313/635437867c638b6bb53169f2 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer sometoken
 
 ###
 ## Удаление предложения из избранного пользователя
 
 DELETE http://localhost:9000/favorite/6353af951d882a3a15cb4313/634ef0047bd6c921c28207a6 HTTP/1.1
 Content-Type: application/json
-
+Authorization: Bearer sometoken
 ###
 ## Получение избранного по id пользователя
 
 GET http://localhost:9000/favorite/634ef0047bd6c921c282078b
 Content-Type: application/json
+Authorization: Bearer sometoken
 
 ###
 # Комментарии
@@ -153,26 +149,30 @@ Content-Type: application/json
 
 ###
 ## Добавление комментария к предложению
-POST http://localhost:9000/offers/634ef0047bd6c921c28207ac/comments HTTP/1.1
+POST http://localhost:9000/offers/634ef0047bd6c921c2820794/comments HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer sometoken
 
 {
   "offerId": "634ef0057bd6c921c28207be",
   "text": "Lorem ipsum",
-  "rating": 2,
-  "authorId": "634ef0047bd6c921c282078b"
+  "rating": 2
 }
 
 ###
 
-## Отправка аватарки пользователю
+## Отправка аватарки пользователя
 
-POST http://localhost:9000/users/634ef0057bd6c921c28207c2/avatar HTTP/1.1
+POST http://localhost:9000/users/635fd68f1f2c147afd3f691b/avatar HTTP/1.1
+Authorization: Bearer sometoken
+
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="avatar"; filename="1.png"
 Content-Type: image/png
 
-< Projects/1.png
+
+< C:/Projects/1.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+

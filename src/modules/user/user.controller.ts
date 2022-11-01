@@ -7,7 +7,7 @@ import HttpError from '../../common/errors/http-error.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
-import { fillDTO } from '../../utils/common.js';
+import { fillDTO, createJWT } from '../../utils/common.js';
 import CreateUserDto from './dto/create-user.dto.js';
 import { UserServiceInterface } from './user-service.interface.js';
 import UserResponse from './response/user.response.js';
@@ -15,6 +15,9 @@ import LoginUserDto from './dto/login-user.dto.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
+import { JWT_ALGORITHM } from '../../const.js';
+import LoggedUserResponse from './response/logged-user.response.js';
+import { PrivateRouteMiddleWare } from '../../common/middlewares/private-route.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -39,12 +42,12 @@ export default class UserController extends Controller {
       middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
     });
     this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.checkAuth});
-    this.addRoute({path: '/logout', method: HttpMethod.Post, handler: this.logout});
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new DocumentExistsMiddleware(this.userService, 'user', 'userId'),
         new UploadFileMiddleware('avatar', this.configService.get('UPLOAD_DIRECTORY'))
       ]
@@ -69,25 +72,27 @@ export default class UserController extends Controller {
     this.created(
       res, fillDTO(UserResponse, result)
     );
-
   }
 
   public async login(
     {body}:Request<Record<string, unknown>, Record<string,unknown>, LoginUserDto>,
     res: Response): Promise<void> {
 
-    const existUser = await this.userService.findByEmail(body.email);
+    const user = await this.userService.verifyUser(body, this.configService.get('SALT'));
 
-    if(!existUser) {
+    if (!user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found`,
+        'Unauthorised',
         'UserController'
       );
     }
 
-    const token = 'someToken';
-    this.ok(res, token);
+    const token = await createJWT(
+      JWT_ALGORITHM,
+      this.configService.get('JWT_SECRET'),
+      {email: user.email, id: user.id});
+    this.ok(res, fillDTO(LoggedUserResponse, {email: user.email, token}));
   }
 
   public async checkAuth(
@@ -103,28 +108,13 @@ export default class UserController extends Controller {
       );
     }
 
-    this.ok(res, fillDTO(UserResponse, existUser));
-  }
-
-  public async logout(
-    {body}:Request<Record<string, unknown>, Record<string,unknown>>,
-    res: Response): Promise<void> {
-
-    const existUser = await this.userService.findByEmail(body.email);
-
-    if (!existUser) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} unauthorised`,
-        'UserController'
-      );
-    }
-
-    this.noContent(res);
+    this.ok(res, fillDTO(LoggedUserResponse, existUser));
   }
 
   public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
+    const avatar = req.file?.path || '';
+    await this.userService.updateById(req.params.userId, avatar);
+    this.ok(res, {
       filepath: req.file?.path
     });
   }

@@ -231,25 +231,6 @@ paths:
         '401':
           description: Пользователь не авторизован
 
-
-  /users/logout:
-    post:
-      tags:
-        - users
-      summary: Выход из закрытой части приложения
-      description: Завершает сеанс, если токен прошел проверку
-      requestBody:
-        description: Информация для выхода из закрытой части приложения
-        content:
-            X-Token:
-              schema:
-                type: string
-
-      responses:
-        '204':
-          description: Сеанс завершен
-
-
   /offers/premium/${city}:
     get:
       tags:
@@ -530,7 +511,7 @@ components:
           type: string
         price:
           type: integer
-        :
+        commentCount:
           type: integer
       example:
         id:  63444077b02202c8cf068388

@@ -16,7 +16,6 @@ export default class OfferGenerator implements OfferGeneratorInterface {
     const preview = getRandomItem<string>(this.mockData.photos);
     const photos = shuffleArray(this.mockData.photos).slice(0, HOUSE_PHOTO_COUNT);
     const premium = Boolean(Math.random() < 0.5);
-    const favorite = Boolean(Math.random() < 0.5);
     const rating = generateRandomValue(Rating.MIN, Rating.MAX, 1).toString();
     const housingType = getRandomItem<string>(this.mockData.housingTypes);
     const roomCount = generateRandomValue(RoomCount.MIN, RoomCount.MAX).toString();
@@ -40,7 +39,6 @@ export default class OfferGenerator implements OfferGeneratorInterface {
       preview,
       photos,
       premium,
-      favorite,
       rating,
       housingType,
       roomCount,

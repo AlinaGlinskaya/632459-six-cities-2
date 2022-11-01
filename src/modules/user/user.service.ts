@@ -7,7 +7,8 @@ import { inject, injectable } from 'inversify';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
 import chalk from 'chalk';
-import UpdateUserDto from './dto/update-user.dto.js';
+import loginUserDto from './dto/login-user.dto.js';
+import { DEFAULT_AVATAR_PATH } from '../../const.js';
 
 @injectable()
 export default class UserService implements UserServiceInterface {
@@ -18,7 +19,7 @@ export default class UserService implements UserServiceInterface {
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const user = new UserEntity(dto);
     if (user.avatarPath === null || user.avatarPath === undefined) {
-      user.avatarPath = './uploads/avatar.svg';
+      user.avatarPath = DEFAULT_AVATAR_PATH;
     }
     user.setPassword(dto.password, salt);
 
@@ -44,8 +45,8 @@ export default class UserService implements UserServiceInterface {
     return this.create(dto, salt);
   }
 
-  public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
-    return this.userModel.findByIdAndUpdate(userId, dto, {new: true});
+  public async updateById(userId: string, filepath: string): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, {'$set': {avatarPath: filepath}}, {new: true});
   }
 
   public async findFavoritesIds(userId: string): Promise<types.DocumentType<UserEntity> | null> {
@@ -53,14 +54,32 @@ export default class UserService implements UserServiceInterface {
   }
 
   public async addToFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
-    return this.userModel.findByIdAndUpdate(userId, {'$push': {favorites: offerId}}, {new: true});
+    const user = await this.userModel.findById(userId);
+    if (!user?.favorites.find((id) => id === offerId)) {
+      return this.userModel.findByIdAndUpdate(userId, {'$push': {favorites: offerId}}, {new: true});
+    }
+    return user;
   }
 
   public async removeFromFavorites(userId: string, offerId: string): Promise<types.DocumentType<UserEntity> | null> {
-    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}});
+    return this.userModel.findByIdAndUpdate(userId, {'$pull': {favorites: offerId}}, {new: true});
   }
 
   public async exists(documentId: string): Promise<boolean> {
     return (await this.userModel.exists({_id: documentId})) !== null;
+  }
+
+  public async verifyUser(dto: loginUserDto, salt: string): Promise<DocumentType<UserEntity> | null> {
+    const user = await this.findByEmail(dto.email);
+
+    if (!user) {
+      return null;
+    }
+
+    if (user.verifyPassword(dto.password, salt)) {
+      return user;
+    }
+
+    return null;
   }
 }

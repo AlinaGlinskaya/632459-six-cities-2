@@ -1,6 +1,6 @@
 import { User } from '../../types/user.type.js';
 import { UserStatus } from '../../types/user-status.enum.js';
-import { UsernameLength} from '../../const.js';
+import { UsernameLength } from '../../const.js';
 import typegoose, { getModelForClass, defaultClasses } from '@typegoose/typegoose';
 import { createSHA256 } from '../../utils/common.js';
 
@@ -25,7 +25,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     this.userStatus = data.userStatus;
   }
 
-  @prop({required: true, minlength: UsernameLength.MIN, maxlength: UsernameLength.MAX})
+  @prop({required: true, trim: true, minlength: UsernameLength.MIN, maxlength: UsernameLength.MAX})
   public userName!: string;
 
   @prop({required: true, unique: true, match: /^([\w-\\.]+@([\w-]+\.)+[\w-]{2,5})?$/})
@@ -49,6 +49,11 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
   public getPassword() {
     return this.password;
+  }
+
+  public verifyPassword(password: string, salt: string) {
+    const hashPassword = createSHA256(password, salt);
+    return hashPassword === this.password;
   }
 }
 

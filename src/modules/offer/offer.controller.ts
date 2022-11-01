@@ -14,6 +14,9 @@ import UpdateOfferDto from './dto/update-offer.dto.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
+import { PrivateRouteMiddleWare } from '../../common/middlewares/private-route.middleware.js';
+import { UserServiceInterface } from '../user/user-service.interface.js';
+import { OFFERS_LIMIT } from '../../const.js';
 
 type ParamsGetOffer = {
   offerId: string
@@ -27,13 +30,14 @@ type ParamsPremiumOffer = {
 export default class OfferController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
-    @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface
+    @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
+    @inject(Component.UserServiceInterface) private readonly userService: UserServiceInterface
   ) {
     super(logger);
 
     this.logger.info('Register routes for OfferController...');
 
-    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({path: '/:limit', method: HttpMethod.Get, handler: this.index});
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
@@ -47,13 +51,17 @@ export default class OfferController extends Controller {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]
+      middlewares: [
+        new PrivateRouteMiddleWare(),
+        new ValidateDtoMiddleware(CreateOfferDto)
+      ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Put,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(CreateOfferDto),
         new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
@@ -64,6 +72,7 @@ export default class OfferController extends Controller {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
       ]
@@ -72,15 +81,25 @@ export default class OfferController extends Controller {
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find();
-    this.ok(res, fillDTO(OfferShortResponse, offers));
+    const limit = Number(_req.params.limit) ?? OFFERS_LIMIT;
+    const offers = await this.offerService.find(limit);
+    const favoritesIds = _req.user?.id ? await this.userService.findFavoritesIds(_req.user.id) : null;
+    const extendedOffers = favoritesIds
+      ? await Promise.all(offers.map(async (offer) => ({
+        ...offer.toObject(), favorite: favoritesIds.favorites.some((id) => id === offer.id)
+      })))
+      : offers.map((offer) => ({...offer.toObject(), favorite: false}));
+    this.ok(res, fillDTO(OfferShortResponse, extendedOffers));
   }
 
-  public async show({params}: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response): Promise<void> {
-    const {offerId} = params;
-
+  public async show(_req: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response): Promise<void> {
+    const {offerId} = _req.params;
     const offer = await this.offerService.findById(offerId);
-    this.ok(res, fillDTO(OfferResponse, offer));
+    const favoritesIds = _req.user?.id ? await this.userService.findFavoritesIds(_req.user.id) : null;
+    const extendedOffer = favoritesIds && offer
+      ? {...offer.toObject(), favorite: favoritesIds.favorites.some((id) => id === offer.id)}
+      : {...offer?.toObject(), favorite: false};
+    this.ok(res, fillDTO(OfferResponse, extendedOffer));
   }
 
   public async create(
