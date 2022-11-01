@@ -64,3 +64,4 @@ export const COMMENTS_LIMIT = 50;
 export const PREMIUM_OFFERS_LIMIT = 3;
 
 export const JWT_ALGORITHM = 'HS256';
+export const DEFAULT_AVATAR_PATH = 'avatar.svg';

@@ -8,6 +8,7 @@ import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
 import chalk from 'chalk';
 import loginUserDto from './dto/login-user.dto.js';
+import { DEFAULT_AVATAR_PATH } from '../../const.js';
 
 @injectable()
 export default class UserService implements UserServiceInterface {
@@ -18,7 +19,7 @@ export default class UserService implements UserServiceInterface {
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const user = new UserEntity(dto);
     if (user.avatarPath === null || user.avatarPath === undefined) {
-      user.avatarPath = './uploads/avatar.svg';
+      user.avatarPath = DEFAULT_AVATAR_PATH;
     }
     user.setPassword(dto.password, salt);
 

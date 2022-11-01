@@ -17,6 +17,7 @@ import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middl
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { JWT_ALGORITHM } from '../../const.js';
 import LoggedUserResponse from './response/logged-user.response.js';
+import { PrivateRouteMiddleWare } from '../../common/middlewares/private-route.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -46,6 +47,7 @@ export default class UserController extends Controller {
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new DocumentExistsMiddleware(this.userService, 'user', 'userId'),
         new UploadFileMiddleware('avatar', this.configService.get('UPLOAD_DIRECTORY'))
       ]
