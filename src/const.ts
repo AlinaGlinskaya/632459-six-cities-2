@@ -58,10 +58,12 @@ export enum OfferDescriptionLength {
   MAX = 1024
 }
 
-export const HOUSE_PHOTO_COUNT = 6;
-export const OFFERS_LIMIT = 60;
-export const COMMENTS_LIMIT = 50;
-export const PREMIUM_OFFERS_LIMIT = 3;
+export enum DefaultLimit {
+  OFFERS = 60,
+  COMMENTS = 50,
+  PREMIUM_OFFERS = 3
+}
 
+export const HOUSE_PHOTO_COUNT = 6;
 export const JWT_ALGORITHM = 'HS256';
 export const DEFAULT_AVATAR_PATH = 'avatar.svg';

@@ -7,7 +7,7 @@ import { OfferEntity } from './offer.entity.js';
 import createOfferDto from './dto/create-offer.dto.js';
 import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
-import { SortType, PREMIUM_OFFERS_LIMIT } from '../../const.js';
+import { SortType, DefaultLimit } from '../../const.js';
 import { setUcFirst } from '../../utils/common.js';
 
 @injectable()
@@ -56,7 +56,7 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel
       .find({city: cityTitle, premium: true})
       .sort({createdAt: SortType.Down})
-      .limit(PREMIUM_OFFERS_LIMIT)
+      .limit(DefaultLimit.PREMIUM_OFFERS)
       .exec();
   }
 

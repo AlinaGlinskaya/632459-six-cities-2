@@ -6,7 +6,7 @@ import { inject, injectable } from 'inversify';
 import { Component } from '../../types/component.types.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import chalk from 'chalk';
-import { COMMENTS_LIMIT, SortType } from '../../const.js';
+import { DefaultLimit, SortType } from '../../const.js';
 
 
 @injectable()
@@ -25,7 +25,7 @@ export default class CommentService implements CommentServiceInterface {
     return this.commentModel
       .find({offerId})
       .sort({createdAt: SortType.Down})
-      .limit(COMMENTS_LIMIT)
+      .limit(DefaultLimit.COMMENTS)
       .populate('authorId')
       .exec();
   }
