@@ -4,6 +4,9 @@ import { HousingType } from '../../../types/housing-type.enum.js';
 
 export default class OfferShortResponse {
   @Expose()
+  public _id!: string;
+
+  @Expose()
   public offerName!: string;
 
   @Expose()

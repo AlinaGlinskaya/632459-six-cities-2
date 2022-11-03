@@ -6,6 +6,9 @@ import OfferCoordinateResponse from './offer-coordinate.response.js';
 
 export default class OfferResponse {
   @Expose()
+  public _id!: string;
+
+  @Expose()
   public offerName!: string;
 
   @Expose()
