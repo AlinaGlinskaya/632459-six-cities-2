@@ -16,7 +16,6 @@ import { DocumentExistsMiddleware } from '../../common/middlewares/document-exis
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import { PrivateRouteMiddleWare } from '../../common/middlewares/private-route.middleware.js';
 import { UserServiceInterface } from '../user/user-service.interface.js';
-import { DefaultLimit } from '../../const.js';
 
 type ParamsGetOffer = {
   offerId: string
@@ -37,7 +36,7 @@ export default class OfferController extends Controller {
 
     this.logger.info('Register routes for OfferController...');
 
-    this.addRoute({path: '/:limit', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
@@ -81,8 +80,7 @@ export default class OfferController extends Controller {
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
-    const limit = Number(_req.params.limit) ?? DefaultLimit.OFFERS;
-    const offers = await this.offerService.find(limit);
+    const offers = await this.offerService.find();
     const favoritesIds = _req.user?.id ? await this.userService.findFavoritesIds(_req.user.id) : null;
     const extendedOffers = favoritesIds
       ? await Promise.all(offers.map(async (offer) => ({

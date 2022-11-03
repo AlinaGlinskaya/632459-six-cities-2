@@ -1,6 +1,7 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { City } from '../../../types/city.enum.js';
 import { HousingType } from '../../../types/housing-type.enum.js';
+import OfferCoordinateResponse from './offer-coordinate.response.js';
 
 export default class OfferShortResponse {
   @Expose()
@@ -35,4 +36,8 @@ export default class OfferShortResponse {
 
   @Expose()
   public commentCount!: number;
+
+  @Expose({ name: 'coordinates'})
+  @Type(() => OfferCoordinateResponse)
+  public coordinates!: OfferCoordinateResponse;
 }

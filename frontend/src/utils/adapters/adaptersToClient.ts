@@ -9,8 +9,8 @@ export const adaptOffersToClient = (offers: OfferDto[]): Offer[] => offers.map((
   isPremium: offer.premium,
   isFavorite: offer.favorite,
   city: {
-    name: 'Cologne',
-    location: {latitude: 50.938361, longitude: 6.959974}
+    name: offer.city,
+    location: offer.coordinates
   },
   location: offer.coordinates,
   previewImage: offer.preview,
