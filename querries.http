@@ -17,7 +17,7 @@ Content-Type: application/json
 ###
 
 ## Получение предложения по id
-GET http://localhost:9000/offers/634ef0047bd6c921c28207a2 HTTP/1.1
+GET http://localhost:9000/offers/6363f8f80f6d1ed08b46710f HTTP/1.1
 Content-Type: application/json
 
 ###
