@@ -1,11 +1,14 @@
-import { Expose, Type } from 'class-transformer';
+import { Expose, Type, Transform } from 'class-transformer';
+import { ObjectId } from 'mongoose';
 import { City } from '../../../types/city.enum.js';
 import { HousingType } from '../../../types/housing-type.enum.js';
+import UserResponse from '../../user/response/user.response.js';
 import OfferCoordinateResponse from './offer-coordinate.response.js';
 
 export default class OfferShortResponse {
   @Expose()
-  public _id!: string;
+  @Transform((_id) => _id.obj._id)
+  public _id!: ObjectId;
 
   @Expose()
   public offerName!: string;
@@ -40,4 +43,8 @@ export default class OfferShortResponse {
   @Expose({ name: 'coordinates'})
   @Type(() => OfferCoordinateResponse)
   public coordinates!: OfferCoordinateResponse;
+
+  @Expose({name: 'authorId'})
+  @Type(() => UserResponse)
+  public author!: UserResponse;
 }

@@ -36,6 +36,7 @@ export default class OfferService implements OfferServiceInterface {
       .find()
       .sort({createdAt: SortType.Down})
       .limit(limit)
+      .populate('authorId')
       .exec();
   }
 

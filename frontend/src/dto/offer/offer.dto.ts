@@ -1,3 +1,5 @@
+import UserDto from '../user/user.dto';
+
 enum City {
   Paris = 'Paris',
   Cologne = 'Cologne',
@@ -50,7 +52,7 @@ export default class OfferDto {
 
   public conveniences!: string[];
 
-  public authorId!: string;
+  public author!: UserDto;
 
   public coordinates!: Coordinate;
 }

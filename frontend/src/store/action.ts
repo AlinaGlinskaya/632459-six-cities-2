@@ -1,12 +1,13 @@
 import type { History } from 'history';
 import type { AxiosInstance, AxiosError } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-
 import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister, NewOffer } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
-import { adaptOffersToClient } from '../utils/adapters/adaptersToClient';
+import { adaptOffersToClient, adaptOfferToClient } from '../utils/adapters/adaptersToClient';
 import OfferDto from '../dto/offer/offer.dto';
+import { adaptSignUpToServer } from '../utils/adapters/adaptersToServer';
+import UserWithTokenDto from '../dto/user/user-with-token.dto';
 
 type Extra = {
   api: AxiosInstance;
@@ -54,9 +55,9 @@ export const fetchOffer = createAsyncThunk<Offer, Offer['id'], { extra: Extra }>
     const { api, history } = extra;
 
     try {
-      const { data } = await api.get<Offer>(`${ApiRoute.Offers}/${id}`);
+      const { data } = await api.get<OfferDto>(`${ApiRoute.Offers}/${id}`);
 
-      return data;
+      return adaptOfferToClient(data);
     } catch (error) {
       const axiosError = error as AxiosError;
 
@@ -110,15 +111,15 @@ export const fetchComments = createAsyncThunk<Comment[], Offer['id'], { extra: E
     return data;
   });
 
-export const fetchUserStatus = createAsyncThunk<UserAuth['email'], undefined, { extra: Extra }>(
+export const fetchUserStatus = createAsyncThunk<UserWithTokenDto['email'], undefined, { extra: Extra }>(
   Action.FETCH_USER_STATUS,
   async (_, { extra }) => {
     const { api } = extra;
 
     try {
-      const { data } = await api.get<User>(ApiRoute.Login);
+      const { data } = await api.get<User['email']>(ApiRoute.Login);
 
-      return data.email;
+      return data;
     } catch (error) {
       const axiosError = error as AxiosError;
 
@@ -134,7 +135,7 @@ export const loginUser = createAsyncThunk<UserAuth['email'], UserAuth, { extra: 
   Action.LOGIN_USER,
   async ({ email, password }, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.post<User & { token: string }>(ApiRoute.Login, { email, password });
+    const { data } = await api.post<UserWithTokenDto & { token: string }>(ApiRoute.Login, { email, password });
     const { token } = data;
 
     Token.save(token);
@@ -154,12 +155,13 @@ export const logoutUser = createAsyncThunk<void, undefined, { extra: Extra }>(
 
 export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra }>(
   Action.REGISTER_USER,
-  async ({ email, password, name, avatar, isPro }, { extra }) => {
+  async (userData, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.post<{id: string }>(ApiRoute.Register, { email, password, name, isPro });
-    if (avatar) {
+
+    const { data } = await api.post<{id: string }>(ApiRoute.Register, adaptSignUpToServer(userData));
+    if (userData.avatar) {
       const payload = new FormData();
-      payload.append('avatar', avatar);
+      payload.append('avatar', userData.avatar);
       await api.post(`/${data.id}${ApiRoute.Avatar}`, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });

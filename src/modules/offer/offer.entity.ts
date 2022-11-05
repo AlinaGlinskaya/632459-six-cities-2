@@ -23,9 +23,6 @@ class Coordinate {
 })
 
 export class OfferEntity extends defaultClasses.TimeStamps {
-  @prop()
-  public id!: string;
-
   @prop({required: true, trim: true, minlength: OfferNameLength.MIN, maxlength: OfferNameLength.MAX})
   public offerName!: string;
 
