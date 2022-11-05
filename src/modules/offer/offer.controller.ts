@@ -14,7 +14,6 @@ import UpdateOfferDto from './dto/update-offer.dto.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
-import { PrivateRouteMiddleWare } from '../../common/middlewares/private-route.middleware.js';
 import { UserServiceInterface } from '../user/user-service.interface.js';
 
 type ParamsGetOffer = {
@@ -51,7 +50,6 @@ export default class OfferController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new PrivateRouteMiddleWare(),
         new ValidateDtoMiddleware(CreateOfferDto)
       ]
     });
@@ -60,7 +58,6 @@ export default class OfferController extends Controller {
       method: HttpMethod.Put,
       handler: this.update,
       middlewares: [
-        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(CreateOfferDto),
         new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
@@ -71,7 +68,6 @@ export default class OfferController extends Controller {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
-        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
       ]
