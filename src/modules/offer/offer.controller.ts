@@ -15,6 +15,7 @@ import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-ob
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import { UserServiceInterface } from '../user/user-service.interface.js';
+import { PrivateRouteMiddleWare } from '../../common/middlewares/private-route.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string
@@ -50,6 +51,7 @@ export default class OfferController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new ValidateDtoMiddleware(CreateOfferDto)
       ]
     });
@@ -97,9 +99,10 @@ export default class OfferController extends Controller {
   }
 
   public async create(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
-    res: Response): Promise<void> {
-    const result = await this.offerService.create(body);
+    {body, user}: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
+    res: Response
+  ): Promise<void> {
+    const result = await this.offerService.create({ ...body, authorId: user.id });
     const offer = await this.offerService.findById(result.id);
     this.created(res, fillDTO(OfferResponse, offer));
   }

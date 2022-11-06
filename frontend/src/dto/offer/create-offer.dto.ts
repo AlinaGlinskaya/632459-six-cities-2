@@ -14,11 +14,7 @@ export default class CreateOfferDto {
 
   public preview!: string;
 
-  public photos!: string[];
-
   public premium!: boolean;
-
-  public favorite!: boolean;
 
   public rating!: number;
 

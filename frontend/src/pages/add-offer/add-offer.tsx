@@ -3,6 +3,7 @@ import { CITIES, CityLocation } from '../../const';
 import OfferForm from '../../components/offer-form/offer-form';
 import { useAppDispatch } from '../../hooks';
 import { postOffer } from '../../store/action';
+import { adaptOfferToServer } from '../../utils/adapters/adaptersToServer';
 
 const emptyOffer: NewOffer = {
   title: '',
@@ -21,7 +22,8 @@ const emptyOffer: NewOffer = {
 const AddOffer = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
 
-  const handleFormSubmit = (offerData: NewOffer) => {
+  const handleFormSubmit = (offerRawData: NewOffer) => {
+    const offerData = adaptOfferToServer(offerRawData);
     dispatch(postOffer(offerData));
   };
 

@@ -1,13 +1,14 @@
 import type { History } from 'history';
 import type { AxiosInstance, AxiosError } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister, NewOffer } from '../types/types';
+import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
 import { adaptOffersToClient, adaptOfferToClient } from '../utils/adapters/adaptersToClient';
 import OfferDto from '../dto/offer/offer.dto';
 import { adaptSignUpToServer } from '../utils/adapters/adaptersToServer';
 import UserWithTokenDto from '../dto/user/user-with-token.dto';
+import CreateOfferDto from '../dto/offer/create-offer.dto';
 
 type Extra = {
   api: AxiosInstance;
@@ -69,7 +70,7 @@ export const fetchOffer = createAsyncThunk<Offer, Offer['id'], { extra: Extra }>
     }
   });
 
-export const postOffer = createAsyncThunk<void, NewOffer, { extra: Extra }>(
+export const postOffer = createAsyncThunk<void, CreateOfferDto, { extra: Extra }>(
   Action.POST_OFFER,
   async (newOffer, { extra }) => {
     const { api, history } = extra;
