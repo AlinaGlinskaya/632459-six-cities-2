@@ -1,7 +1,7 @@
 import { Offer } from '../../types/types';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { postFavorite } from '../../store/action';
+import { deleteFavorite, postFavorite } from '../../store/action';
 import { getIsAuthorized } from '../../store/user-process/selectors';
 
 type BookmarkProps = {
@@ -15,7 +15,11 @@ const Bookmark = ({ id, isActive, place = 'place-card' }: BookmarkProps) => {
   const isAuthorized = useAppSelector(getIsAuthorized);
 
   const handleButtonClick = () => {
-    dispatch(postFavorite({ id }));
+    if (isActive) {
+      dispatch(deleteFavorite({ id }));
+    } else {
+      dispatch(postFavorite({ id }));
+    }
   };
 
   return (

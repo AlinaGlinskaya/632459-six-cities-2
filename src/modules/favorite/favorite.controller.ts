@@ -51,14 +51,12 @@ export default class FavoriteController extends Controller {
       ]
     });
     this.addRoute({
-      path: '/:userId/:offerId',
+      path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.removeFavorite,
       middlewares: [
         new PrivateRouteMiddleWare(),
-        new ValidateObjectIdMiddleware('userId'),
         new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.userService, 'user', 'userId'),
         new DocumentExistsMiddleware(this.offerService, 'offer', 'offerId')
       ]});
   }
