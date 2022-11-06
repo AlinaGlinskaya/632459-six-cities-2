@@ -3,11 +3,9 @@ import { useEffect } from 'react';
 
 import ReviewList from '../../components/review-list/review-list';
 import Map from '../../components/map/map';
-import Card from '../../components/card/card';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   fetchOffer,
-  fetchPremiumOffers,
   fetchComments,
   postComment,
   deleteOffer,
@@ -18,7 +16,6 @@ import { CommentAuth } from '../../types/types';
 import { getIsAuthorized } from '../../store/user-process/selectors';
 import {
   getIsOfferLoading,
-  getPremiumOffers,
   getOffer,
   selectComments,
   getCommentStatus,
@@ -34,7 +31,6 @@ const Property = (): JSX.Element | null => {
   const isOfferLoading = useAppSelector(getIsOfferLoading);
   const user = useAppSelector(getUser);
   const offer = useAppSelector(getOffer);
-  const premiumOffers = useAppSelector(getPremiumOffers);
   const comments = useAppSelector(selectComments);
   const commentStatus = useAppSelector(getCommentStatus);
 
@@ -45,12 +41,6 @@ const Property = (): JSX.Element | null => {
       dispatch(fetchComments(id));
     }
   }, [params, dispatch]);
-
-  useEffect(() => {
-    if (offer) {
-      dispatch(fetchPremiumOffers(offer.city.name));
-    }
-  }, [dispatch, offer]);
 
   if (isOfferLoading) {
     return <Spinner />;
@@ -78,12 +68,8 @@ const Property = (): JSX.Element | null => {
     location,
   } = offer;
   const isAuthor = host.email === user;
-  const locations = premiumOffers.map(
-    ({ id: premiumId, location: premiumLocation }) => ({
-      id: premiumId,
-      ...premiumLocation,
-    })
-  );
+
+  const locations = [];
   locations.push({ id, ...location });
 
   const handleDeleteClick = () => {
@@ -211,22 +197,6 @@ const Property = (): JSX.Element | null => {
             place="property"
           />
         </section>
-        <div className="container">
-          <section className="near-places places">
-            <h2 className="near-places__title">
-              Premium offers
-            </h2>
-            <div className="near-places__list places__list">
-              {premiumOffers.map((premiumOffer) => (
-                <Card
-                  key={premiumOffer.id}
-                  {...premiumOffer}
-                  classPrefix="near-places"
-                />
-              ))}
-            </div>
-          </section>
-        </div>
       </main>
     </div>
   );

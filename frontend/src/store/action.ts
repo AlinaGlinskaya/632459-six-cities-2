@@ -26,6 +26,7 @@ export const Action = {
   FETCH_COMMENTS: 'offer/fetch-comments',
   POST_COMMENT: 'offer/post-comment',
   POST_FAVORITE: 'offer/post-favorite',
+  DELETE_FAVORITE: 'offer/delete-favorite',
   LOGIN_USER: 'user/login',
   LOGOUT_USER: 'user/logout',
   FETCH_USER_STATUS: 'user/fetch-status',
@@ -182,11 +183,11 @@ export const postComment = createAsyncThunk<Comment[], CommentAuth, { extra: Ext
 
 export const postFavorite = createAsyncThunk<Offer, FavoriteAuth, { extra: Extra }>(
   Action.POST_FAVORITE,
-  async ({ id, status }, { extra }) => {
+  async ({ id }, { extra }) => {
     const { api, history } = extra;
 
     try {
-      const { data } = await api.post<Offer>(`${ApiRoute.Favorite}/${id}/${status}`);
+      const { data } = await api.post<Offer>(`${ApiRoute.Favorite}/${id}`);
 
       return data;
     } catch (error) {
@@ -199,4 +200,24 @@ export const postFavorite = createAsyncThunk<Offer, FavoriteAuth, { extra: Extra
       return Promise.reject(error);
     }
   });
+
+export const deleteFavorite = createAsyncThunk<Offer, FavoriteAuth, { extra: Extra }>(
+  Action.DELETE_FAVORITE,
+  async ({ id }, { extra }) => {
+    const { api, history } = extra;
+
+    try {
+      const { data } = await api.delete(`${ApiRoute.Favorite}/${id}`);
+      return data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response?.status === HttpCode.NoAuth) {
+        history.push(AppRoute.Login);
+      }
+
+      return Promise.reject(error);
+    }
+  }
+);
 
