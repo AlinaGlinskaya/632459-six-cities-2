@@ -1,6 +1,6 @@
 import CreateOfferDto from '../../dto/offer/create-offer.dto';
 import CreateUserDto from '../../dto/user/create-user.dto';
-import { Offer, UserRegister } from '../../types/types';
+import { NewOffer, UserRegister } from '../../types/types';
 
 export enum UserStatus {
   Common = 'Common',
@@ -15,16 +15,14 @@ export const adaptSignUpToServer = (user: UserRegister): CreateUserDto => ({
   userStatus: user.isPro ? UserStatus.Pro : UserStatus.Common
 });
 
-export const adaptOfferToServer = (offer: Offer): CreateOfferDto => ({
+export const adaptOfferToServer = (offer: NewOffer): CreateOfferDto => ({
   offerName: offer.title,
   description: offer.description,
   date: new Date(),
   city: offer.city.name,
   preview: offer.previewImage,
-  photos: offer.images,
   premium: offer.isPremium,
-  favorite: offer.isFavorite,
-  rating: offer.rating,
+  rating: 1,
   housingType: offer.type,
   roomCount: offer.bedrooms,
   guestCount: offer.maxAdults,
@@ -34,5 +32,4 @@ export const adaptOfferToServer = (offer: Offer): CreateOfferDto => ({
     latitude: offer.location.latitude,
     longitude: offer.location.longitude
   }
-
 });

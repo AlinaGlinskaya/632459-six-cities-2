@@ -3,9 +3,9 @@ import { Coordinate } from '../../../types/coordinate.type.js';
 import { HousingType } from '../../../types/housing-type.enum.js';
 import { MinLength, MaxLength, IsDateString, IsEnum,
   IsLatitude, IsLongitude, ValidateNested, IsString,
-  IsArray, IsNotEmpty, IsBoolean, Min, Max, IsMongoId, ArrayMinSize } from 'class-validator';
+  IsArray, IsNotEmpty, IsBoolean, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Rating, OfferNameLength, OfferDescriptionLength, RoomCount, GuestCount, Price, HOUSE_PHOTO_COUNT } from '../../../const.js';
+import { Rating, OfferNameLength, OfferDescriptionLength, RoomCount, GuestCount, Price } from '../../../const.js';
 
 class CoordinatesSchema {
   @IsLatitude({message: 'Property must be correct latitude'})
@@ -33,17 +33,8 @@ export default class CreateOfferDto {
   @IsString({message: 'Preview is required'})
   public preview!: string;
 
-  @IsArray({message: 'Photos must be an array'})
-  @IsString({each: true, message: 'Photo url must be a string'})
-  @IsNotEmpty({message: 'Photos is required'})
-  @ArrayMinSize(HOUSE_PHOTO_COUNT, {message: `Minimum photo count is ${HOUSE_PHOTO_COUNT}`})
-  public photos!: string[];
-
   @IsBoolean({message: 'Premuim must be boolean value'})
   public premium!: boolean;
-
-  @IsBoolean({message: 'Favorite must be boolean value'})
-  public favorite!: boolean;
 
   @Min(Rating.MIN, {message: `Minimum rating is ${Rating.MIN}`})
   @Max(Rating.MAX, {message: `Maximum rating is ${Rating.MAX}`})
@@ -69,7 +60,6 @@ export default class CreateOfferDto {
   @IsNotEmpty({message: 'Conveniences is required'})
   public conveniences!: string[];
 
-  @IsMongoId({message: 'authorId field must be valid id'})
   public authorId!: string;
 
   @ValidateNested()
