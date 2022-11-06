@@ -182,11 +182,11 @@ export const postComment = createAsyncThunk<Comment[], CommentAuth, { extra: Ext
 
 export const postFavorite = createAsyncThunk<Offer, FavoriteAuth, { extra: Extra }>(
   Action.POST_FAVORITE,
-  async ({ id, status }, { extra }) => {
+  async ({ id } , { extra }) => {
     const { api, history } = extra;
 
     try {
-      const { data } = await api.post<Offer>(`${ApiRoute.Favorite}/${id}/${status}`);
+      const { data } = await api.post<Offer>(`${ApiRoute.Favorite}/${id}`);
 
       return data;
     } catch (error) {

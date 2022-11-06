@@ -15,10 +15,7 @@ const Bookmark = ({ id, isActive, place = 'place-card' }: BookmarkProps) => {
   const isAuthorized = useAppSelector(getIsAuthorized);
 
   const handleButtonClick = () => {
-    dispatch(postFavorite({
-      id,
-      status: isActive ? 0 : 1
-    }));
+    dispatch(postFavorite({ id }));
   };
 
   return (
