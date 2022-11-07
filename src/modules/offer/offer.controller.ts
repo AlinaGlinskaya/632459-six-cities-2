@@ -77,24 +77,27 @@ export default class OfferController extends Controller {
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.showPremium});
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
+  public async index(req: Request, res: Response): Promise<void> {
+    const {user} = req;
+    const currentUser = user && await this.userService.findById(user.id);
     const offers = await this.offerService.find();
-    const favoritesIds = _req.user?.id ? await this.userService.findFavoritesIds(_req.user.id) : null;
-    const extendedOffers = favoritesIds
-      ? await Promise.all(offers.map(async (offer) => ({
-        ...offer.toObject(), favorite: favoritesIds.favorites.some((id) => id === offer.id)
-      })))
-      : offers.map((offer) => ({...offer.toObject(), favorite: false}));
+    const extendedOffers = offers.map((offer) => {
+      const isFavorite = !!currentUser?.favorites.includes(offer.id);
+      return {...offer, favorite: isFavorite};
+    });
+
     this.ok(res, fillDTO(OfferShortResponse, extendedOffers));
   }
 
-  public async show(_req: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response): Promise<void> {
-    const {offerId} = _req.params;
+  public async show(req: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response): Promise<void> {
+    const {user, params} = req;
+    const {offerId} = params;
+    const currentUser = user && await this.userService.findById(user.id);
     const offer = await this.offerService.findById(offerId);
-    const favoritesIds = _req.user?.id ? await this.userService.findFavoritesIds(_req.user.id) : null;
-    const extendedOffer = favoritesIds && offer
-      ? {...offer.toObject(), favorite: favoritesIds.favorites.some((id) => id === offer.id)}
-      : {...offer?.toObject(), favorite: false};
+    const extendedOffer = {
+      ...offer,
+      favorite: offer && !!currentUser?.favorites.includes(offer.id),
+    };
     this.ok(res, fillDTO(OfferResponse, extendedOffer));
   }
 

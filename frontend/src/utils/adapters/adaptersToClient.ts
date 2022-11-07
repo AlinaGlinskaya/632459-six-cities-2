@@ -3,7 +3,7 @@ import UserDto from '../../dto/user/user.dto';
 import { Offer, Type, User } from '../../types/types';
 
 export const adaptOffersToClient = (offers: OfferDto[]): Offer[] => offers.map((offer: OfferDto) => ({
-  id: offer._id,
+  id: offer.id,
   price: offer.price,
   rating: offer.rating,
   title: offer.offerName,
@@ -25,7 +25,7 @@ export const adaptOffersToClient = (offers: OfferDto[]): Offer[] => offers.map((
 }));
 
 export const adaptOfferToClient = (offer: OfferDto): Offer => ({
-  id: offer._id,
+  id: offer.id,
   price: offer.price,
   rating: offer.rating,
   title: offer.offerName,

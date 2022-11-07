@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { Token } from './utils';
 
 const BACKEND_URL = 'http://localhost:9000';
-const REQUEST_TIMEOUT = 5000;
+const REQUEST_TIMEOUT = 10000;
 
 export const createAPI = (): AxiosInstance => {
   const api = axios.create({

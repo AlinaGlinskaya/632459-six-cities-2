@@ -5,7 +5,7 @@ import UserResponse from '../../user/response/user.response.js';
 import OfferCoordinateResponse from './offer-coordinate.response.js';
 
 export default class OfferResponse {
-  @Expose()
+  @Expose({name: '_id'})
   public id!: string;
 
   @Expose()
