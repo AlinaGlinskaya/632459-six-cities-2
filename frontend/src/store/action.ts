@@ -4,11 +4,12 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
-import { adaptOffersToClient, adaptOfferToClient } from '../utils/adapters/adaptersToClient';
+import { adaptCommentsToClient, adaptOffersToClient, adaptOfferToClient } from '../utils/adapters/adaptersToClient';
 import OfferDto from '../dto/offer/offer.dto';
-import { adaptSignUpToServer } from '../utils/adapters/adaptersToServer';
+import { adaptCommentsToServer, adaptSignUpToServer } from '../utils/adapters/adaptersToServer';
 import UserWithTokenDto from '../dto/user/user-with-token.dto';
 import CreateOfferDto from '../dto/offer/create-offer.dto';
+import CommentDto from '../dto/comment/comment.dto';
 
 type Extra = {
   api: AxiosInstance;
@@ -108,9 +109,9 @@ export const fetchComments = createAsyncThunk<Comment[], Offer['id'], { extra: E
   Action.FETCH_COMMENTS,
   async (id, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Comment[]>(`${ApiRoute.Comments}/${id}`);
+    const { data } = await api.get<CommentDto[]>(`${ApiRoute.Comments}/${id}/comments`);
 
-    return data;
+    return data.map(adaptCommentsToClient);
   });
 
 export const fetchUserStatus = createAsyncThunk<UserWithTokenDto['email'], undefined, { extra: Extra }>(
@@ -176,7 +177,8 @@ export const postComment = createAsyncThunk<Comment[], CommentAuth, { extra: Ext
   Action.POST_COMMENT,
   async ({ id, comment, rating }, { extra }) => {
     const { api } = extra;
-    const { data } = await api.post<Comment[]>(`${ApiRoute.Comments}/${id}`, { comment, rating });
+    const payload = adaptCommentsToServer({offerId: id, comment, rating});
+    const { data } = await api.post<Comment[]>(`${ApiRoute.Comments}/${id}/comments`, payload);
 
     return data;
   });

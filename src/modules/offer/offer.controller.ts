@@ -85,7 +85,6 @@ export default class OfferController extends Controller {
       const isFavorite = !!currentUser?.favorites.includes(offer.id);
       return {...offer, favorite: isFavorite};
     });
-
     this.ok(res, fillDTO(OfferShortResponse, extendedOffers));
   }
 
@@ -95,7 +94,8 @@ export default class OfferController extends Controller {
     const currentUser = user && await this.userService.findById(user.id);
     const offer = await this.offerService.findById(offerId);
     const extendedOffer = {
-      ...offer,
+      ...offer?.toObject(),
+      id: offer?.id,
       favorite: offer && !!currentUser?.favorites.includes(offer.id),
     };
     this.ok(res, fillDTO(OfferResponse, extendedOffer));

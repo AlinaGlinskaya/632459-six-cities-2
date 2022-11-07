@@ -36,6 +36,12 @@ export type Comment = {
   user: User;
 };
 
+export type NewComment = {
+  offerId: string;
+  comment: string;
+  rating: number;
+};
+
 export type Offer = {
   id: string;
   price: number;

@@ -9,7 +9,6 @@ import chalk from 'chalk';
 import updateOfferDto from './dto/update-offer.dto.js';
 import { SortType, DefaultLimit } from '../../const.js';
 import { setUcFirst } from '../../utils/common.js';
-import { LeanDocument } from 'mongoose';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -24,10 +23,9 @@ export default class OfferService implements OfferServiceInterface {
     return result;
   }
 
-  public async findById(offerId: string): Promise<LeanDocument<OfferEntity> | null> {
+  public async findById(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
     return this.offerModel
-      .findById(offerId, {})
-      .lean()
+      .findById(offerId)
       .exec();
   }
 
