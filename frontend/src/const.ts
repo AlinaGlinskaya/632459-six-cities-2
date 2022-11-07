@@ -8,7 +8,7 @@ export const CITIES = [
   'Hamburg',
   'Dusseldorf',
 ];
-export const TYPES = ['apartment', 'room', 'house', 'hotel'] as const;
+export const TYPES = ['Apartment', 'Room', 'House', 'Hotel'] as const;
 export const GOODS = [
   'Breakfast',
   'Air conditioning',
@@ -48,7 +48,7 @@ export enum ApiRoute {
   Logout = '/logout',
   Register = '/users/register',
   Avatar = '/avatar',
-  Comments = '/comments',
+  Comments = '/offers',
   Favorite = '/favorite',
   Premium = 'offers/premium',
 }

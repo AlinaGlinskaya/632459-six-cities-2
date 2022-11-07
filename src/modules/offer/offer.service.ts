@@ -14,7 +14,7 @@ import { setUcFirst } from '../../utils/common.js';
 export default class OfferService implements OfferServiceInterface {
   constructor(
     @inject(Component.LoggerInterface) private readonly logger: LoggerInterface,
-    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
+    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
   ) {}
 
   public async create(dto: createOfferDto): Promise<types.DocumentType<OfferEntity>> {
@@ -26,18 +26,16 @@ export default class OfferService implements OfferServiceInterface {
   public async findById(offerId: string): Promise<types.DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findById(offerId)
-      .populate('authorId')
       .exec();
   }
 
   public async find(count?: number): Promise<types.DocumentType<OfferEntity>[]> {
     const limit = count ?? DefaultLimit.OFFERS;
     return this.offerModel
-      .find()
-      .sort({createdAt: SortType.Down})
-      .limit(limit)
-      .populate('authorId')
-      .exec();
+      .aggregate([
+        {$addFields: {id: {$toString: '$_id'}}},
+        {$limit: limit},
+      ]).exec();
   }
 
   public async updateById(offerId: string, dto: updateOfferDto): Promise<types.DocumentType<OfferEntity> | null> {

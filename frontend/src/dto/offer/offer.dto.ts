@@ -22,7 +22,7 @@ enum HousingType {
 }
 
 export default class OfferDto {
-  public _id!: string;
+  public id!: string;
 
   public offerName!: string;
 

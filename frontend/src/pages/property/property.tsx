@@ -68,7 +68,6 @@ const Property = (): JSX.Element | null => {
     location,
   } = offer;
   const isAuthor = host.email === user;
-
   const locations = [];
   locations.push({ id, ...location });
 

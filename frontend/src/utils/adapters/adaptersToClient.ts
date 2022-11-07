@@ -1,9 +1,10 @@
 import OfferDto from '../../dto/offer/offer.dto';
 import UserDto from '../../dto/user/user.dto';
-import { Offer, Type, User } from '../../types/types';
+import { Comment, Offer, Type, User } from '../../types/types';
+import CommentDto from '../../dto/comment/comment.dto';
 
 export const adaptOffersToClient = (offers: OfferDto[]): Offer[] => offers.map((offer: OfferDto) => ({
-  id: offer._id,
+  id: offer.id,
   price: offer.price,
   rating: offer.rating,
   title: offer.offerName,
@@ -25,7 +26,7 @@ export const adaptOffersToClient = (offers: OfferDto[]): Offer[] => offers.map((
 }));
 
 export const adaptOfferToClient = (offer: OfferDto): Offer => ({
-  id: offer._id,
+  id: offer.id,
   price: offer.price,
   rating: offer.rating,
   title: offer.offerName,
@@ -53,3 +54,10 @@ export const adaptUserToClient = (user: UserDto): User => ({
   email: user.email
 });
 
+export const adaptCommentsToClient = (comment: CommentDto): Comment => ({
+  id: comment.id,
+  comment: comment.text,
+  date: comment.date,
+  rating: comment.rating,
+  user: comment.author,
+});

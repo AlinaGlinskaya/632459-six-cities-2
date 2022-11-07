@@ -1,7 +1,7 @@
 import { Offer } from '../../types/types';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { postFavorite, deleteFavorite } from '../../store/action';
+import { deleteFavorite, postFavorite } from '../../store/action';
 import { getIsAuthorized } from '../../store/user-process/selectors';
 
 type BookmarkProps = {

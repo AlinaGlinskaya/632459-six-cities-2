@@ -1,4 +1,4 @@
-import { MinLength, MaxLength, Min, Max, IsMongoId, IsInt } from 'class-validator';
+import { MinLength, MaxLength, Min, Max, IsInt, IsMongoId } from 'class-validator';
 import { CommentLength, CommentRating } from '../../../const.js';
 
 export default class CreateCommentDto {

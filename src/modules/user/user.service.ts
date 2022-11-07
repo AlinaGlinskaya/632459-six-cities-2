@@ -33,7 +33,7 @@ export default class UserService implements UserServiceInterface {
   }
 
   public async findById(userId: string): Promise<DocumentType<UserEntity, types.BeAnObject> | null> {
-    return this.userModel.findById({userId});
+    return this.userModel.findById(userId);
   }
 
   public async findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {

@@ -1,6 +1,7 @@
 import CreateOfferDto from '../../dto/offer/create-offer.dto';
 import CreateUserDto from '../../dto/user/create-user.dto';
-import { NewOffer, UserRegister } from '../../types/types';
+import { NewComment, NewOffer, UserRegister } from '../../types/types';
+import CreateCommentDto from '../../dto/comment/create-comment.dto';
 
 export enum UserStatus {
   Common = 'Common',
@@ -32,5 +33,10 @@ export const adaptOfferToServer = (offer: NewOffer): CreateOfferDto => ({
     latitude: offer.location.latitude,
     longitude: offer.location.longitude
   }
+});
 
+export const adaptCommentsToServer = (newComment: NewComment): CreateCommentDto => ({
+  offerId: newComment.offerId,
+  text: newComment.comment,
+  rating: newComment.rating,
 });
